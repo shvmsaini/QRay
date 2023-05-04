@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">QR</string>
+    <string name="password">Password</string>
+    <string name="login">Login\n</string>
+    <string name="signup">Signup</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="signup_text">Don\'t have an account? Signup instead</string>
+    <string name="login_back">Already have an account? Login instead</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="create_account">Create An Account</string>
+    <string name="college_id">College ID</string>
+    <string name="register">Register</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="state">It\'s so lonely here, just like you.</string>
+    <string name="title_activity_attendance">AttendanceActivity</string>
+    <string name="title_activity_document">DocumentActivity</string>
+    <string name="file_upload">File Upload</string>
+</resources>
