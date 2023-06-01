@@ -16,6 +16,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.CreateAttendanceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.AttendeesActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.AttendanceActivity"
             android:exported="false"
             android:label="@string/title_activity_attendance"

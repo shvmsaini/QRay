@@ -18,6 +18,8 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ProfileBinding.inflate(getLayoutInflater());
+        binding.profileName.setText(LoginActivity.NAME);
+        binding.profileEmail.setText(LoginActivity.EMAIL);
         return binding.getRoot();
         // view = inflater.inflate(binding.getRoot(), container, false);
     }

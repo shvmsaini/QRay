@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary_blue"
+    tools:ignore="HardcodedText">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/docRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:maxHeight="130dp"
+        android:paddingBottom="140dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBaseline_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/linearLayout"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:listitem="@layout/doc_item">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:baselineAligned="true"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="16dp">
+
+        <TextView
+            android:id="@+id/file_select"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/secondary_blue"
+            android:padding="8dp"
+            android:text="@string/file_name"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:drawableEndCompat="@drawable/baseline_file_upload_24"
+            app:drawableTint="@color/white" />
+
+        <Button
+            android:id="@+id/upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/secondary_blue"
+            android:contentDescription="@string/file_upload"
+            android:text="Upload"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

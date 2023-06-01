@@ -10,6 +10,6 @@
     <color name="primary_blue">#252847</color>
     <color name="secondary_blue">#343760</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="approve">#00897B</color>
-    <color name="disapprove">#E53935</color>
+    <color name="download">#00897B</color>
+    <color name="delete">#E53935</color>
 </resources>

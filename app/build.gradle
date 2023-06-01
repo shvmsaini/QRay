@@ -30,7 +30,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    buildFeatures{
+    buildFeatures {
         viewBinding true
         dataBinding true
         compose true
@@ -49,9 +49,21 @@ android {
 }
 
 dependencies {
+    /* Volley */
     implementation 'com.android.volley:volley:1.2.1'
+
+    /* Fast Android Networking */
+    implementation 'com.amitshekhar.android:android-networking:1.0.2'
+
+    /* QR Management */
+    implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
+
+    /* Google Vision */
+    implementation 'com.google.android.gms:play-services-vision:17.0.2'
+
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
     implementation 'androidx.activity:activity-compose:1.5.1'

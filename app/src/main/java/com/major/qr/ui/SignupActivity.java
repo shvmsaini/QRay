@@ -28,8 +28,8 @@ import org.json.JSONObject;
 import java.nio.charset.StandardCharsets;
 
 public class SignupActivity extends AppCompatActivity {
-    public SignupLayoutBinding binding;
     private final String TAG = getClass().getSimpleName();
+    public SignupLayoutBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,13 +53,14 @@ public class SignupActivity extends AppCompatActivity {
             final String email = binding.emailForSignup.getText().toString();
             final String password = binding.passwordForSignup.getText().toString();
             final String confirmPassword = binding.confirmPasswordForSignup.getText().toString();
-            final String collegeId = binding.collegeId.getText().toString();
-            if (!validate(name, email, password, confirmPassword, collegeId))
+            final String country = binding.country.getText().toString();
+            //final String collegeId = binding.collegeId.getText().toString();
+            if (!validate(name, email, password, confirmPassword, country))
                 return;
             Log.d(TAG, "onCreate: Preparing Request");
             // Everything works, send registration request
             RequestQueue queue = Volley.newRequestQueue(this);
-            String url = "http://3.110.193.163:8080/api/user/register";
+            final String url = LoginActivity.URL + "/user/register";
             final JSONObject mp = new JSONObject();
             try {
                 mp.put("country", "india");
@@ -106,24 +107,30 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-    boolean validate(String name, String email, String password, String confirmPassword, String collegeId) {
+    boolean validate(String name, String email, String password, String confirmPassword,
+                     String country) {
         if (name.length() == 0) {
-            Toast.makeText(this, "Well, give your name please!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Well, give your name please!",
+                    Toast.LENGTH_SHORT).show();
             return false;
         } else if (email.length() < 2) { //TODO: Email validator
-            Toast.makeText(this, "Well, give your email please!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Well, give your email please!",
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
         if (password.length() < 6) {
-            Toast.makeText(this, "Well, password length should be at least 6!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Well, password length should be at least 6!",
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!confirmPassword.equals(password)) {
-            Toast.makeText(this, "Well, both password should match!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Well, both password should match!",
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (collegeId.length() == 0) {
-            Toast.makeText(this, "Well, give your college ID please!", Toast.LENGTH_SHORT).show();
+        if (country.length() == 0) {
+            Toast.makeText(this, "Well, mention you country please!",
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
         return false;

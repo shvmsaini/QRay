@@ -2,6 +2,7 @@ package com.major.qr.ui;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 public class HomeFragment extends Fragment {
     private HomeBinding binding;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = HomeBinding.inflate(getLayoutInflater());
         // Inflate the layout for this fragment

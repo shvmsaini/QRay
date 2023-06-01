@@ -17,4 +17,13 @@
     <string name="title_activity_attendance">AttendanceActivity</string>
     <string name="title_activity_document">DocumentActivity</string>
     <string name="file_upload">File Upload</string>
+    <string name="file_name">File Name…</string>
+    <string name="country">Country</string>
+    <string name="phone">Phone Number</string>
+    <string name="create_attendance_button">Create Attendance Button</string>
+    <string name="create">Create</string>
+    <string name="mark">Mark</string>
+    <string name="total_attendees">Total Attendees</string>
+    <string name="date">Date</string>
+    <string name="time">time</string>
 </resources>

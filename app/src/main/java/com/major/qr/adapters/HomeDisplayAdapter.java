@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -39,6 +40,11 @@ public class HomeDisplayAdapter extends RecyclerView.Adapter<HomeDisplayAdapter.
         holder.s2.setText(d.getS2());
         holder.s3.setText(d.getS3());
         holder.c1.setChecked(d.getState());
+
+        // Buttons gone
+        holder.b1.setVisibility(View.GONE);
+        holder.b2.setVisibility(View.GONE);
+        holder.b3.setVisibility(View.GONE);
     }
 
     @Override
@@ -49,6 +55,7 @@ public class HomeDisplayAdapter extends RecyclerView.Adapter<HomeDisplayAdapter.
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView s1, s2, s3;
         CheckBox c1;
+        Button b1, b2, b3;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
@@ -56,6 +63,9 @@ public class HomeDisplayAdapter extends RecyclerView.Adapter<HomeDisplayAdapter.
             s2 = itemView.findViewById(R.id.textview2);
             s3 = itemView.findViewById(R.id.textview3);
             c1 = itemView.findViewById(R.id.checkbox);
+            b1 = itemView.findViewById(R.id.update_button);
+            b2 = itemView.findViewById(R.id.download_button);
+            b3 = itemView.findViewById(R.id.delete_button);
         }
     }
 }
