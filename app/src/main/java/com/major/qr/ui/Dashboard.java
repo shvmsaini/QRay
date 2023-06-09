@@ -12,15 +12,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.major.qr.R;
-import com.major.qr.databinding.DashboardBinding;
+import com.major.qr.databinding.ActivityDashboardBinding;
 
 public class Dashboard extends AppCompatActivity {
-    private DashboardBinding binding;
+    private ActivityDashboardBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DashboardBinding.inflate(getLayoutInflater());
+        binding = ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.navigation.setOnItemSelectedListener(item -> {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

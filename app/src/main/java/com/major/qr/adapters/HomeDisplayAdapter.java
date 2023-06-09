@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,17 +30,17 @@ public class HomeDisplayAdapter extends RecyclerView.Adapter<HomeDisplayAdapter.
     @Override
     public HomeDisplayAdapter.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.doc_item, parent, false);
+        View view = inflater.inflate(R.layout.item_doc, parent, false);
         return new ItemViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull HomeDisplayAdapter.ItemViewHolder holder, int position) {
         Doc d = list.get(position);
-        holder.s1.setText(d.getS1());
-        holder.s2.setText(d.getS2());
-        holder.s3.setText(d.getS3());
-        holder.c1.setChecked(d.getState());
+        holder.s1.setText(d.getDocumentType());
+        holder.s2.setText(d.getDocumentReference());
+        holder.s3.setText(d.getDocumentId());
+//        holder.c1.setChecked(d.getState());
 
         // Buttons gone
         holder.b1.setVisibility(View.GONE);
@@ -55,7 +56,8 @@ public class HomeDisplayAdapter extends RecyclerView.Adapter<HomeDisplayAdapter.
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView s1, s2, s3;
         CheckBox c1;
-        Button b1, b2, b3;
+        Button b1, b2;
+        ImageButton b3;
 
         public ItemViewHolder(View itemView) {
             super(itemView);

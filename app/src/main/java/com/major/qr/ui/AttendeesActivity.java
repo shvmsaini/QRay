@@ -21,19 +21,19 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.major.qr.adapters.AttendeesDisplayAdapter;
-import com.major.qr.databinding.AttendeesLayoutBinding;
+import com.major.qr.databinding.ActivityAttendeesBinding;
 import com.major.qr.viewmodels.AttendeesViewModel;
 
 public class AttendeesActivity extends AppCompatActivity {
     public static final String TAG = AttendeesActivity.class.getSimpleName();
-    private AttendeesLayoutBinding binding;
+    private ActivityAttendeesBinding binding;
     private AttendeesDisplayAdapter adapter;
     private AttendeesViewModel viewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = AttendeesLayoutBinding.inflate(getLayoutInflater());
+        binding = ActivityAttendeesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         Bundle bundle = getIntent().getExtras();
@@ -56,8 +56,7 @@ public class AttendeesActivity extends AppCompatActivity {
             });
 
             ImageView imageView = new ImageView(this);
-            builder.addContentView(imageView, new RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            builder.addContentView(imageView, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             QRCodeWriter writer = new QRCodeWriter();
             try {
                 BitMatrix bitMatrix = writer.encode(Id, BarcodeFormat.QR_CODE, 512, 512);

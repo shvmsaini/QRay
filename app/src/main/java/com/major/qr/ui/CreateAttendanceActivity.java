@@ -16,7 +16,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.major.qr.adapters.AttendanceDisplayAdapter;
-import com.major.qr.databinding.CreateAttendanceLayoutBinding;
+import com.major.qr.databinding.ActivityCreateAttendanceBinding;
 import com.major.qr.viewmodels.CreateAttendanceViewModel;
 
 import java.util.HashMap;
@@ -24,14 +24,14 @@ import java.util.Map;
 
 public class CreateAttendanceActivity extends AppCompatActivity {
     private final String TAG = CreateAttendanceActivity.class.getSimpleName();
-    private CreateAttendanceLayoutBinding binding;
+    private ActivityCreateAttendanceBinding binding;
     private CreateAttendanceViewModel viewModel;
     private AttendanceDisplayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = CreateAttendanceLayoutBinding.inflate(getLayoutInflater());
+        binding = ActivityCreateAttendanceBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         viewModel = ViewModelProviders.of(this).get(CreateAttendanceViewModel.class);

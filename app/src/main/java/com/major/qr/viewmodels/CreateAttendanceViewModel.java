@@ -2,7 +2,6 @@ package com.major.qr.viewmodels;
 
 import android.app.Application;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -31,14 +30,15 @@ public class CreateAttendanceViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public MutableLiveData<ArrayList<Attendance>> getAttendances(){
-        if(list == null){
+    public MutableLiveData<ArrayList<Attendance>> getAttendances() {
+        if (list == null) {
             list = new MutableLiveData<>();
             loadAttendanceList();
         }
         return list;
     }
-    private void loadAttendanceList(){
+
+    private void loadAttendanceList() {
         final String url = LoginActivity.URL + "/attendance/get";
         RequestQueue queue = Volley.newRequestQueue(getApplication());
         StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
@@ -47,16 +47,15 @@ public class CreateAttendanceViewModel extends AndroidViewModel {
             try {
                 JSONArray jsonArray = new JSONArray(response);
                 Log.d(TAG, "jsonArray = " + jsonArray);
-                for(int i = 0; i < jsonArray.length(); ++i){
+                for (int i = 0; i < jsonArray.length(); ++i) {
                     JSONObject object = jsonArray.getJSONObject(i);
                     Log.d(TAG, "loadAttendanceList: " + object);
-                    Attendance attendance = new Attendance();
-                    if(!object.has("name")) continue;
-                    attendance.setName(object.getString("name"));
-                    attendance.setId(object.getString("id"));
-                    attendance.setTotalAttenders(object.getString("totalAttenders"));
-                    attendance.setCreationDate(object.getString("creationDate"));
-                    attendanceArrayList.add(attendance);
+                    if (!object.has("name")) continue;
+                    attendanceArrayList.add(new Attendance(
+                            object.getString("name"),
+                            object.getString("id"),
+                            object.getString("totalAttenders"),
+                            object.getString("creationDate")));
                 }
                 list.postValue(attendanceArrayList);
             } catch (JSONException e) {
@@ -72,6 +71,7 @@ public class CreateAttendanceViewModel extends AndroidViewModel {
                 }};
             }
         };
+
         queue.add(request);
     }
 }

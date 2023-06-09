@@ -20,7 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.major.qr.databinding.SignupLayoutBinding;
+import com.major.qr.databinding.ActivitySignupBinding;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,12 +29,12 @@ import java.nio.charset.StandardCharsets;
 
 public class SignupActivity extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
-    public SignupLayoutBinding binding;
+    public ActivitySignupBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = SignupLayoutBinding.inflate(getLayoutInflater());
+        binding = ActivitySignupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         // For log in link
         SpannableString signupSpan = new SpannableString(binding.loginBack.getText().toString());

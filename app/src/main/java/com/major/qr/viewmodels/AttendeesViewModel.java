@@ -47,21 +47,21 @@ public class AttendeesViewModel extends AndroidViewModel {
             try {
                 JSONArray jsonArray = new JSONArray(response);
                 Log.d(TAG, "jsonArray = " + jsonArray);
-                for(int i = 0; i < jsonArray.length(); ++i){
+                for (int i = 0; i < jsonArray.length(); ++i) {
                     JSONObject object = jsonArray.getJSONObject(i);
                     Log.d(TAG, "loadAttendanceList: " + object);
-                    Attendees attendee = new Attendees();
-                    attendee.setDisplayName(object.getString("displayName"));
-                    attendee.setAddedDateTime(object.getString("addedDateTime"));
-                    attendee.setEmail(object.getString("email"));
-                    attendeesArrayList.add(attendee);
+                    attendeesArrayList.add(new Attendees(
+                            object.getString("displayName"),
+                            object.getString("addedDateTime"),
+                            object.getString("attendersId"),
+                            object.getString("email")));
                 }
                 list.postValue(attendeesArrayList);
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
         }, error -> {
-            Log.e("HttpClient", "error: " + error.toString());
+            Log.e(TAG, "error: " + error.toString());
         }) {
             @Override
             public Map<String, String> getHeaders() {

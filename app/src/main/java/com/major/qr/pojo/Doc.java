@@ -1,47 +1,40 @@
 package com.major.qr.pojo;
 
 public class Doc {
-    String s1;
-    String s2;
-    String s3;
-    Boolean state;
+    String documentType;
+    String documentReference;
+    String documentId;
 
-    public String getS1() {
-        return s1;
+    public Doc(String s1, String s2, String s3) {
+        this.documentType = s1;
+        this.documentReference = s2;
+        this.documentId = s3;
     }
 
-    public void setS1(String s1) {
-        this.s1 = s1;
+    public Doc() {
     }
 
-    public String getS2() {
-        return s2;
+    public String getDocumentType() {
+        return documentType;
     }
 
-    public void setS2(String s2) {
-        this.s2 = s2;
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
     }
 
-    public String getS3() {
-        return s3;
+    public String getDocumentReference() {
+        return documentReference;
     }
 
-    public void setS3(String s3) {
-        this.s3 = s3;
+    public void setDocumentReference(String documentReference) {
+        this.documentReference = documentReference;
     }
 
-    public Boolean getState() {
-        return state;
+    public String getDocumentId() {
+        return documentId;
     }
 
-    public void setState(Boolean state) {
-        this.state = state;
-    }
-
-    public Doc(String s1, String s2, String s3, Boolean state){
-        this.s1 = s1;
-        this.s2 = s2;
-        this.s3 = s3;
-        this.state = state;
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 }

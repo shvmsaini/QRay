@@ -9,13 +9,14 @@
     android:backgroundTint="@color/secondary_blue"
     tools:ignore="HardcodedText">
 
-
     <ImageButton
         android:id="@+id/delete_attendance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/zxing_transparent"
         android:contentDescription="Delete Attendance Button"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
         android:src="@drawable/baseline_delete_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

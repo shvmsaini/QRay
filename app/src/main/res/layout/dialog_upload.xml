@@ -1,0 +1,66 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="200dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp"
+    android:layout_margin="16dp"
+    android:gravity="center"
+    android:baselineAligned="true"
+    android:orientation="vertical"
+    tools:layout_editor_absoluteX="16dp">
+
+    <TextView
+        android:id="@+id/file_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/secondary_blue"
+        app:drawableEndCompat="@drawable/baseline_file_upload_24"
+        app:drawableTint="@color/white"
+        android:padding="8dp"
+        android:text="@string/file_name"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/docReference"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/input_background"
+            android:backgroundTint="@color/secondary_blue"
+            app:drawableEndCompat="@drawable/baseline_lock_24"
+            android:drawablePadding="8dp"
+            app:drawableTint="@color/white"
+            android:enabled="false"
+            android:padding="8dp"
+            android:text="DocReference"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/upload"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/input_background"
+            app:backgroundTint="@color/secondary_blue"
+            android:contentDescription="@string/file_upload"
+            android:text="Upload"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+
+</LinearLayout>

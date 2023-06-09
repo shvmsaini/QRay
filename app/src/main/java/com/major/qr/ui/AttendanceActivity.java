@@ -17,7 +17,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.major.qr.databinding.AttendanceLayoutBinding;
+import com.major.qr.databinding.ActivityAttendanceBinding;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,12 +28,12 @@ import java.util.Map;
 public class AttendanceActivity extends AppCompatActivity {
     private final static String TAG = AttendanceActivity.class.getSimpleName();
     String AttendanceId;
-    private AttendanceLayoutBinding binding;
+    private ActivityAttendanceBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = AttendanceLayoutBinding.inflate(getLayoutInflater());
+        binding = ActivityAttendanceBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         binding.create.setOnClickListener(v -> {
