@@ -12,11 +12,11 @@
     <ImageButton
         android:id="@+id/delete_button"
         android:layout_width="wrap_content"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/zxing_transparent"
         android:contentDescription="Delete Attendance Button"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
         android:src="@drawable/baseline_delete_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -69,10 +69,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/textview3"
             android:clipToPadding="false"
-            android:paddingTop="4dp"
             android:divider="@drawable/empty_tall_divider"
             android:gravity="center"
             android:orientation="horizontal"
+            android:paddingTop="4dp"
             android:showDividers="middle">
 
             <Button

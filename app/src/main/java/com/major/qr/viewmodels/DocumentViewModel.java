@@ -2,7 +2,6 @@ package com.major.qr.viewmodels;
 
 import android.app.Application;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
@@ -36,12 +35,12 @@ import java.util.Map;
 public class DocumentViewModel extends AndroidViewModel {
     private static final String TAG = DocumentViewModel.class.getSimpleName();
     private static final String UPLOAD_MAPPING = "/documents/upload";
-    private MutableLiveData<String> updateDocResponse;
     private MutableLiveData<ArrayList<Doc>> docList;
-    private HashMap<String, MutableLiveData<String>> documentReferencesMLD = new HashMap<>();
+    private HashMap<String, MutableLiveData<String>> documentReferencesMLD;
 
     public DocumentViewModel(Application application) {
         super(application);
+        documentReferencesMLD = new HashMap<>();
     }
 
     /**
@@ -50,7 +49,7 @@ public class DocumentViewModel extends AndroidViewModel {
      * @param file File to upload
      */
     public MutableLiveData<String> uploadDoc(File file) {
-        MutableLiveData<String> mutableLiveData =new MutableLiveData<>();
+        MutableLiveData<String> mutableLiveData = new MutableLiveData<>();
         final String URL = LoginActivity.URL + UPLOAD_MAPPING;
         AndroidNetworking.upload(URL)
                 .addHeaders("Authorization", LoginActivity.ACCESS_TOKEN)
@@ -144,22 +143,23 @@ public class DocumentViewModel extends AndroidViewModel {
     /**
      * Used to update the doc in database
      *
-     * @param fileLink link to the doc
+     * @param docReference reference id of doc
+     * @param file         file to replace it with
      */
     public MutableLiveData<String> updateDoc(String docReference, File file) {
-        final String URL = LoginActivity.URL + UPLOAD_MAPPING;
-        AndroidNetworking.upload(URL)
+        MutableLiveData<String> updateDocResponse = new MutableLiveData<>();
+        final String URL = LoginActivity.URL + "/documents/update/";
+        AndroidNetworking.put(URL)
                 .addHeaders("Authorization", LoginActivity.ACCESS_TOKEN)
-                .addMultipartFile("document", file)
-                .addMultipartParameter("documentReference", docReference)
-                .setTag("uploadingFile")
-                .setPriority(Priority.HIGH)
+                .addFileBody(file)
+                .addBodyParameter("documentReference", docReference)
+                .setTag("updatingFile")
+                .setPriority(Priority.IMMEDIATE)
                 .build()
-                .setUploadProgressListener((bytesUploaded, totalBytes) -> Log.d(TAG, "" + bytesUploaded))
+//                .setUploadProgressListener((bytesUploaded, totalBytes) -> Log.d(TAG, "" + bytesUploaded))
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        updateDocResponse = new MutableLiveData<>();
                         updateDocResponse.postValue(response.toString());
                         Log.d(TAG, "onResponse: " + response);
                     }
@@ -181,7 +181,6 @@ public class DocumentViewModel extends AndroidViewModel {
         if (docList != null)
             return docList;
         docList = new MutableLiveData<>();
-        String docLink = "";
         final String url = LoginActivity.URL + "/documents/getDocuments";
         RequestQueue queue = Volley.newRequestQueue(getApplication());
         StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
@@ -267,5 +266,32 @@ public class DocumentViewModel extends AndroidViewModel {
         }
 
         return bytes;
+    }
+
+    /**
+     * Deletes Document
+     *
+     * @param documentId
+     * @param docReference
+     */
+    public MutableLiveData<Object> deleteDoc(String documentId, String docReference) {
+        MutableLiveData<Object> mutableLiveData = new MutableLiveData<>();
+        final String url = LoginActivity.URL + "/documents/delete/" + "?documentId=" + documentId
+                + "&documentReference=" + docReference;
+        RequestQueue queue = Volley.newRequestQueue(getApplication());
+        StringRequest request = new StringRequest(Request.Method.DELETE, url, response -> {
+            Log.d(TAG, response);
+            mutableLiveData.postValue(response);
+        }, error -> Log.d(TAG, error.toString())) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return new HashMap<String, String>() {{
+                    put("Authorization", LoginActivity.ACCESS_TOKEN);
+                    put("accept", "*/*");
+                }};
+            }
+        };
+        queue.add(request);
+        return mutableLiveData;
     }
 }

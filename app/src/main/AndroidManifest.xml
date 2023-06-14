@@ -22,20 +22,19 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".ui.CreateAttendanceActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.AttendeesActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.AttendanceActivity"
+            android:name=".ui.AttendanceFragment"
             android:exported="false"
-            android:label="@string/title_activity_attendance"
-            android:theme="@style/Theme.QR" />
+            android:label="@string/title_fragment_attendance"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/Theme.QR"
+            tools:replace="screenOrientation" />
         <activity
-            android:name=".ui.DocumentActivity"
+            android:name=".ui.DocumentFragment"
             android:exported="false"
-            android:label="@string/title_activity_document"
+            android:label="@string/title_fragment_document"
             android:theme="@style/Theme.QR" />
         <activity
             android:name=".ui.LoginActivity"
@@ -51,8 +50,14 @@
             android:name=".ui.SignupActivity"
             android:launchMode="singleTop" />
         <activity
-            android:name=".ui.Dashboard"
+            android:name=".ui.DashboardActivity"
             android:launchMode="singleTop" />
+        <activity
+            android:name=".utils.CaptureActivityPortrait"
+            android:screenOrientation="sensorPortrait"
+            android:stateNotNeeded="true"
+            android:theme="@style/zxing_CaptureTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
     </application>
 
 </manifest>

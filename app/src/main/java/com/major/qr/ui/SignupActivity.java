@@ -113,7 +113,7 @@ public class SignupActivity extends AppCompatActivity {
             Toast.makeText(this, "Well, give your name please!",
                     Toast.LENGTH_SHORT).show();
             return false;
-        } else if (email.length() < 2) { //TODO: Email validator
+        } else if (email.length() < 2) { // TODO: Email validator
             Toast.makeText(this, "Well, give your email please!",
                     Toast.LENGTH_SHORT).show();
             return false;

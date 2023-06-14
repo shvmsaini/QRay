@@ -1,71 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary_blue"
-    tools:context=".ui.Dashboard"
+    tools:context=".ui.DashboardActivity"
     tools:ignore="HardcodedText">
 
     <LinearLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical">
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+        <androidx.cardview.widget.CardView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_gravity="center"
-            android:background="@drawable/round_outline"
-            android:clipToOutline="true"
-            android:src="@drawable/placeholder"
-            tools:ignore="ContentDescription" />
+            android:elevation="12dp"
+            app:cardCornerRadius="50dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name"
-            android:textColor="@color/white" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:importantForAccessibility="no"
+                android:scaleType="centerCrop"
+                android:src="@drawable/placeholder" />
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/profile_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name here"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif"
+            android:text="Your Name"
             android:textColor="@color/white"
             android:textSize="32sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Email"
-            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/profile_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Email"
+            android:text="example@email.com"
+            android:textColor="#A9A9A9"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/phone_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="+919876543210"
             android:textColor="@color/white"
-            android:textSize="32sp" />
+            android:textSize="18sp" />
 
-        <!--        <TextView-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="Name"-->
-        <!--            android:textColor="@color/white" />-->
+          <TextView
+            android:id="@+id/country"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="🇮🇳 Indian"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
-        <!--        <TextView-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="Name here"-->
-        <!--            android:textColor="@color/white"-->
-        <!--            android:textSize="32sp" />-->
     </LinearLayout>
 
+    <Button
+        android:id="@+id/edit_profile_button"
+        android:layout_width="253dp"
+        android:layout_height="48dp"
+        android:background="@drawable/button_style"
+        android:backgroundTintMode="add"
+        android:drawableEnd="@drawable/baseline_arrow_forward_24"
+        android:drawableTint="@color/white"
+        android:text="Edit profile"
+        android:textColor="@color/white"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="wrap_content"
+        android:minWidth="100dp"
+        android:layout_height="48dp"
+        android:background="@drawable/button_style"
+        android:backgroundTintMode="add"
+        android:text="Logout"
+        android:textColor="@color/white"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_profile_button"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,11 +1,14 @@
 package com.major.qr.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -39,23 +42,21 @@ public class LoginActivity extends AppCompatActivity {
         AndroidNetworking.enableLogging();
 
         loginViewModel = new LoginViewModel(getApplication());
+        SharedPreferences preferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 
-        // For sign up link
+        // For signup activity link
         SpannableString signupSpan = new SpannableString(binding.signup.getText().toString());
         signupSpan.setSpan(new ClickableSpan() {
             @Override
             public void onClick(@NonNull View view) {
-                Intent signupIntent = new Intent(LoginActivity.this,
-                        SignupActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent signupIntent = new Intent(LoginActivity.this, SignupActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(signupIntent);
             }
         }, 23, 29, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         binding.signup.setText(signupSpan);
         binding.signup.setMovementMethod(LinkMovementMethod.getInstance());
 
-        // Login
         binding.loginButton.setOnClickListener(view -> {
-//             TODO: Get and Store USERID in preferences
             String email = binding.emailForLogin.getText().toString().trim();
             String password = binding.passwordForLogin.getText().toString();
             if (email.length() == 0) {
@@ -67,7 +68,12 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
+            SharedPreferences.Editor editor = preferences.edit();
             loginViewModel.getLoginData(email, password).observe(this, jsonObject -> {
+                if (jsonObject == null) {
+                    Toast.makeText(this, "Unable to login!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 try {
                     if (jsonObject.has("uid") && !jsonObject.isNull("uid")) {
                         USERID = (String) jsonObject.get("uid");
@@ -76,16 +82,34 @@ public class LoginActivity extends AppCompatActivity {
                         ACCESS_TOKEN = (String) jsonObject.get("accessToken");
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(this, "Unable to login!", Toast.LENGTH_SHORT).show();
                     throw new RuntimeException(e);
                 }
-                Intent intent = new Intent(this, Dashboard.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                editor.putString("uid", USERID);
+                editor.putString("access_token", ACCESS_TOKEN);
+                editor.putString("name", NAME);
+                editor.putString("email", EMAIL);
+                editor.apply();
+                Intent intent = new Intent(this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                Toast.makeText(getApplication(), "Success! Logging in...", Toast.LENGTH_SHORT)
-                        .show();
+                finish();
+                Toast.makeText(getApplication(), "Success! Logging in...", Toast.LENGTH_SHORT).show();
             });
 
         });
+
+        // Checking if user is already logged with stored info
+        if (!preferences.getString("uid", "none").equals("none")) {
+            USERID = preferences.getString("uid", "");
+            ACCESS_TOKEN = preferences.getString("access_token", "");
+            NAME = preferences.getString("name", "");
+            EMAIL = preferences.getString("email", "");
+            Log.d(TAG, "ACCESS_TOKEN = " + ACCESS_TOKEN);
+            Log.d(TAG, "USERID = " + USERID);
+            Log.d(TAG, "NAME = " + NAME);
+            Log.d(TAG, "EMAIL = " + EMAIL);
+            Intent intent = new Intent(this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.major.qr.adapters;
 
+import static com.major.qr.ui.LoginActivity.URL;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AttendanceDisplayAdapter extends RecyclerView.Adapter<AttendanceDisplayAdapter.ItemViewHolder> {
+    public static final String TAG = AttendanceDisplayAdapter.class.getSimpleName();
     ArrayList<Attendance> list;
     Context context;
 
@@ -53,45 +56,48 @@ public class AttendanceDisplayAdapter extends RecyclerView.Adapter<AttendanceDis
         holder.creationDate.setText(attendance.getCreationDate());
         holder.itemView.setOnClickListener(v -> {
             Intent i = new Intent(context, AttendeesActivity.class);
+            Log.d(TAG, "onBindViewHolder: " + attendance.getId());
             i.putExtra("Id", attendance.getId());
             context.startActivity(i);
         });
+
         holder.deleteButton.setOnClickListener(v -> {
-            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        //Yes button clicked
-                        final String url = LoginActivity.URL + "/attendance/delete?attendanceId=" + attendance.getId();
-                        RequestQueue queue = Volley.newRequestQueue(context);
-                        StringRequest request = new StringRequest(Request.Method.DELETE, url, response -> {
-                            Toast.makeText(context, "Successfully deleted!", Toast.LENGTH_SHORT).show();
-                             list.remove(position);
-                            notifyItemRemoved(position);
-                            notifyItemRangeChanged(position, getItemCount());
-                        }, error -> {
-                            Toast.makeText(context, "Unable to delete!", Toast.LENGTH_SHORT).show();
-                            Log.e("HttpClient", "error: " + error.toString());
+            DialogInterface.OnClickListener dialogClickListener =
+                    (dialog, which) -> {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
+                                final String url = URL + "/attendance/delete?attendanceId=" + attendance.getId();
+                                RequestQueue queue = Volley.newRequestQueue(context);
+                                StringRequest request = new StringRequest(Request.Method.DELETE, url, response -> {
+                                    Toast.makeText(context, "Successfully deleted!", Toast.LENGTH_SHORT).show();
+                                    list.remove(position);
+                                    notifyItemRemoved(position);
+                                    notifyItemRangeChanged(position, getItemCount());
+                                }, error -> {
+                                    Toast.makeText(context, "Unable to delete!", Toast.LENGTH_SHORT).show();
+                                    Log.e("HttpClient", "error: " + error.toString());
+                                    holder.itemView.setVisibility(View.GONE);
+                                }) {
+                                    @Override
+                                    public Map<String, String> getHeaders() {
+                                        return new HashMap<String, String>() {{
+                                            put("Authorization", LoginActivity.ACCESS_TOKEN);
+                                        }};
+                                    }
+                                };
+                                queue.add(request);
+                                break;
 
-                            holder.itemView.setVisibility(View.GONE);
-                        }) {
-                            @Override
-                            public Map<String, String> getHeaders() {
-                                return new HashMap<String, String>() {{
-                                    put("Authorization", LoginActivity.ACCESS_TOKEN);
-                                }};
-                            }
-                        };
-                        queue.add(request);
-                        break;
-
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        //No button clicked
-                        break;
-                }
-            };
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                break;
+                        }
+                    };
 
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
+            builder.setMessage("Are you sure?")
+                    .setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener)
+                    .show();
         });
     }
 

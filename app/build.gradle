@@ -55,8 +55,13 @@ dependencies {
     /* Fast Android Networking */
     implementation 'com.amitshekhar.android:android-networking:1.0.2'
 
+    /* Retrofit */
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation  'com.squareup.retrofit2:converter-gson:2.9.0'
+
     /* QR Management */
     implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
+    implementation 'com.google.zxing:core:3.4.0'
 
     /* Google Vision */
     implementation 'com.google.android.gms:play-services-vision:17.0.2'

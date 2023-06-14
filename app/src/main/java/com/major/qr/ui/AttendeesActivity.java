@@ -28,7 +28,7 @@ public class AttendeesActivity extends AppCompatActivity {
     public static final String TAG = AttendeesActivity.class.getSimpleName();
     private ActivityAttendeesBinding binding;
     private AttendeesDisplayAdapter adapter;
-    private AttendeesViewModel viewModel;
+    AttendeesViewModel viewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,5 +74,7 @@ public class AttendeesActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
+
+        binding.backButton.setOnClickListener(view -> onBackPressed());
     }
 }

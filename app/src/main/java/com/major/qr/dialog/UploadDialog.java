@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,20 +25,32 @@ import androidx.fragment.app.DialogFragment;
 
 import com.major.qr.R;
 import com.major.qr.databinding.DialogUploadBinding;
+import com.major.qr.interfaces.UpdateService;
+import com.major.qr.ui.LoginActivity;
 import com.major.qr.utils.FileUtils;
 import com.major.qr.viewmodels.DocumentViewModel;
 
 import java.io.File;
+import java.util.Objects;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UploadDialog extends DialogFragment {
     public static final String TAG = UploadDialog.class.getSimpleName();
     private final int FILE_PICK_REQUEST = 200;
     private final int REQUEST_CAPTURE_IMAGE = 201;
+    private final DocumentViewModel documentViewModel;
     Uri uri;
     String imageFilePath;
     private DialogUploadBinding binding;
     private String documentReference;
-    private final DocumentViewModel documentViewModel;
 
     public UploadDialog(String documentReference, DocumentViewModel documentViewModel) {
         this.documentViewModel = documentViewModel;
@@ -51,7 +64,7 @@ public class UploadDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         binding = DialogUploadBinding.inflate(getLayoutInflater());
         builder.setView(binding.getRoot()).setTitle("Select File");
 
@@ -71,9 +84,10 @@ public class UploadDialog extends DialogFragment {
 
         if (documentReference != null)
             binding.docReference.setText(documentReference);
+        else binding.docReference.setVisibility(View.GONE);
 
         binding.upload.setOnClickListener(view -> {
-            ActivityCompat.requestPermissions(getActivity(),
+            ActivityCompat.requestPermissions(requireActivity(),
                     new String[]{
                             Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.MANAGE_EXTERNAL_STORAGE
@@ -87,7 +101,7 @@ public class UploadDialog extends DialogFragment {
                 } else {
                     Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                    Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+                    Uri uri = Uri.fromParts("package", requireActivity().getPackageName(), null);
                     intent.setData(uri);
                     startActivity(intent);
                 }
@@ -95,20 +109,44 @@ public class UploadDialog extends DialogFragment {
 
             String path = binding.fileSelect.getText().toString();
             if (!path.isEmpty() || !path.equals(getResources().getString(R.string.file_name))) {
-                String[] strings = FileUtils.getPath(getContext(), uri).split("/");
+                String[] strings = Objects.requireNonNull(FileUtils.getPath(getContext(), uri)).split("/");
                 StringBuilder stringBuilder = new StringBuilder();
                 for (int i = 0; i < strings.length - 1; ++i)
                     stringBuilder.append("/").append(strings[i]);
-                final String filePath = stringBuilder.toString();
-                final String fileName = strings[strings.length - 1];
-                File file = new File(filePath, fileName);
+                File file = new File(stringBuilder.toString(), strings[strings.length - 1]);
                 Log.d(TAG, "onCreate: " + file.getAbsolutePath());
-                if (documentReference != null)
-                    documentViewModel.updateDoc(documentReference, file).observe(this, s -> {
-                        Toast.makeText(getContext(), "Successfully updated!", Toast.LENGTH_SHORT).show();
+                if (documentReference != null) {
+                    Log.d(TAG, "documentReference = " + documentReference);
+
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl("http://43.205.195.167:8080/api/")
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+                    UpdateService updateService = retrofit.create(UpdateService.class);
+
+                    MultipartBody.Part filePart = MultipartBody.Part.createFormData("document",
+                            file.getName(), RequestBody.create(MediaType.parse(
+                                    requireActivity().getContentResolver().getType(Uri.fromFile(file))), file));
+                    Call<String> jsonObjectCall = updateService.updateDoc(LoginActivity.ACCESS_TOKEN, filePart, documentReference);
+                    jsonObjectCall.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            Log.d(TAG, "call = " + response);
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            Log.e(TAG, "onFailure: " + call);
+                        }
                     });
-                else documentViewModel.uploadDoc(file).observe(this, s -> {
+
+//                    documentViewModel.updateDoc(documentReference, file).observe(this, s -> {
+//                        Toast.makeText(getContext(), "Successfully updated!", Toast.LENGTH_SHORT).show();
+//                        dismiss();
+//                    });
+                } else documentViewModel.uploadDoc(file).observe(this, s -> {
                     Toast.makeText(getContext(), "Successfully uploaded!", Toast.LENGTH_SHORT).show();
+                    dismiss();
                 });
             } else
                 Toast.makeText(getContext(), "Select a file first!", Toast.LENGTH_SHORT).show();
@@ -126,7 +164,7 @@ public class UploadDialog extends DialogFragment {
                 Log.d(TAG, "File Uri: " + uri.toString());
                 String path;
                 String[] projection = {MediaStore.Files.FileColumns.DATA};
-                Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
+                Cursor cursor = requireActivity().getContentResolver().query(uri, projection, null, null, null);
                 if (cursor == null) {
                     path = uri.getPath();
                 } else {
@@ -156,6 +194,5 @@ public class UploadDialog extends DialogFragment {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-
     }
 }

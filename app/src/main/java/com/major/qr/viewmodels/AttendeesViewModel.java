@@ -1,5 +1,7 @@
 package com.major.qr.viewmodels;
 
+import static com.major.qr.ui.LoginActivity.URL;
+
 import android.app.Application;
 import android.util.Log;
 
@@ -31,18 +33,17 @@ public class AttendeesViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<ArrayList<Attendees>> getAttendees(String Id) {
-        if (list == null) {
-            list = new MutableLiveData<>();
-            loadAttendeesList(Id);
-        }
+        list = new MutableLiveData<>();
+        loadAttendeesList(Id);
         return list;
     }
 
     private void loadAttendeesList(String id) {
-        final String url = LoginActivity.URL + "/attendance/get?attendanceId=" + id;
+        final String url = URL + "/attendance/get?attendanceId=" + id;
         RequestQueue queue = Volley.newRequestQueue(getApplication());
         StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
-            Log.d("HttpClient", "success! response: " + response);
+            Log.d(TAG, "url = " + url);
+            Log.d(TAG, "success! response: " + response);
             ArrayList<Attendees> attendeesArrayList = new ArrayList<>();
             try {
                 JSONArray jsonArray = new JSONArray(response);
@@ -66,6 +67,7 @@ public class AttendeesViewModel extends AndroidViewModel {
             @Override
             public Map<String, String> getHeaders() {
                 return new HashMap<String, String>() {{
+                    put("accept", "*/*");
                     put("Authorization", LoginActivity.ACCESS_TOKEN);
                 }};
             }
