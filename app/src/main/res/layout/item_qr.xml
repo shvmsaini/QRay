@@ -1,6 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:background="@drawable/input_background"
+    android:backgroundTint="@color/secondary_blue"
+    tools:ignore="HardcodedText">
+
+    <ImageButton
+        android:id="@+id/delete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/zxing_transparent"
+        android:contentDescription="Delete Attendance Button"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:src="@drawable/baseline_delete_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
+
+
+    <ImageButton
+        android:id="@+id/qr_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/zxing_transparent"
+        android:contentDescription="Delete Attendance Button"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:src="@drawable/baseline_qr_code_2_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/white" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5">
+
+        <TextView
+            android:id="@+id/last_seen_view_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="0dp"
+            android:paddingEnd="8dp"
+            android:text="Last Seen :"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/doc_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/last_seen_view_field"
+            android:minWidth="300dp"
+            android:text="Other"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/qr_name_view_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/doc_type"
+            android:text="Name : "
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/doc_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/qr_name_view_field"
+            android:layout_below="@id/doc_type"
+            android:text="Add Title here..."
+            android:textColor="@color/white" />
+
+
+        <TextView
+            android:id="@+id/qr_id_view_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/doc_id"
+            android:text="Qr ID : "
+            android:textColor="@color/white" />
+        <TextView
+            android:id="@+id/doc_ref"
+            android:layout_width="wrap_content"
+            android:layout_toEndOf="@id/qr_id_view_field"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/doc_id"
+            android:text="other"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

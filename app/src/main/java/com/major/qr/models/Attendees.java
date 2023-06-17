@@ -1,10 +1,10 @@
-package com.major.qr.pojo;
+package com.major.qr.models;
 
 public class Attendees {
-    String addedDateTime;
-    String displayName;
-    String attendersId;
-    String email;
+    private String addedDateTime;
+    private String displayName;
+    private String attendersId;
+    private String email;
 
     public Attendees(String addedDateTime, String displayName, String attendersId, String email) {
         this.addedDateTime = addedDateTime;

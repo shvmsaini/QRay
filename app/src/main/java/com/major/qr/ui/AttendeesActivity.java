@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
@@ -16,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.divider.MaterialDividerItemDecoration;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -26,9 +26,9 @@ import com.major.qr.viewmodels.AttendeesViewModel;
 
 public class AttendeesActivity extends AppCompatActivity {
     public static final String TAG = AttendeesActivity.class.getSimpleName();
+    AttendeesViewModel viewModel;
     private ActivityAttendeesBinding binding;
     private AttendeesDisplayAdapter adapter;
-    AttendeesViewModel viewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,9 +41,10 @@ public class AttendeesActivity extends AppCompatActivity {
 
         viewModel = ViewModelProviders.of(this).get(AttendeesViewModel.class);
         viewModel.getAttendees(Id).observe(this, attendees -> {
-            Log.d(TAG, "onCreate: " + attendees);
             adapter = new AttendeesDisplayAdapter(this, attendees);
             binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            binding.recyclerView.addItemDecoration(new MaterialDividerItemDecoration(this,
+                    LinearLayoutManager.VERTICAL));
             binding.recyclerView.setAdapter(adapter);
         });
 
@@ -52,7 +53,6 @@ public class AttendeesActivity extends AppCompatActivity {
             builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
             builder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
             builder.setOnDismissListener(dialogInterface -> {
-                //nothing;
             });
 
             ImageView imageView = new ImageView(this);
@@ -75,6 +75,6 @@ public class AttendeesActivity extends AppCompatActivity {
             }
         });
 
-        binding.backButton.setOnClickListener(view -> onBackPressed());
+        binding.topAppBar.setNavigationOnClickListener(view -> onBackPressed());
     }
 }

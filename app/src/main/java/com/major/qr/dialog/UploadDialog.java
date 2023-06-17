@@ -1,6 +1,7 @@
 package com.major.qr.dialog;
 
 import static android.app.Activity.RESULT_OK;
+import static com.major.qr.ui.LoginActivity.URL;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -67,6 +68,8 @@ public class UploadDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         binding = DialogUploadBinding.inflate(getLayoutInflater());
         builder.setView(binding.getRoot()).setTitle("Select File");
+        if (documentReference != null) binding.docReference.setText(documentReference);
+        else binding.docReference.setVisibility(View.GONE);
 
         binding.fileSelect.setOnClickListener(view -> {
             String[] supportedMimeTypes = {"application/pdf", "application/msword", "image/*"};
@@ -81,10 +84,6 @@ public class UploadDialog extends DialogFragment {
                 Toast.makeText(getContext(), "Please install a File Manager.", Toast.LENGTH_SHORT).show();
             }
         });
-
-        if (documentReference != null)
-            binding.docReference.setText(documentReference);
-        else binding.docReference.setVisibility(View.GONE);
 
         binding.upload.setOnClickListener(view -> {
             ActivityCompat.requestPermissions(requireActivity(),
@@ -119,15 +118,19 @@ public class UploadDialog extends DialogFragment {
                     Log.d(TAG, "documentReference = " + documentReference);
 
                     Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl("http://43.205.195.167:8080/api/")
+                            .baseUrl(URL + "/")
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
                     UpdateService updateService = retrofit.create(UpdateService.class);
-
+//                    MultipartBody.Part filePart = MultipartBody.Part.createFormData("document",
+//                            file.getName(), RequestBody.create(MediaType.parse(
+//                                    requireActivity().getContentResolver().getType(Uri.fromFile(file))), file));
                     MultipartBody.Part filePart = MultipartBody.Part.createFormData("document",
-                            file.getName(), RequestBody.create(MediaType.parse(
-                                    requireActivity().getContentResolver().getType(Uri.fromFile(file))), file));
-                    Call<String> jsonObjectCall = updateService.updateDoc(LoginActivity.ACCESS_TOKEN, filePart, documentReference);
+                            file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+                    MultipartBody body = new MultipartBody.Builder()
+                            .addFormDataPart("documentReference", documentReference).build();
+                    RequestBody body1 = RequestBody.create(MediaType.parse("multipart/form-data"), documentReference);
+                    Call<String> jsonObjectCall = updateService.updateDoc(LoginActivity.ACCESS_TOKEN, filePart, body1);
                     jsonObjectCall.enqueue(new Callback<String>() {
                         @Override
                         public void onResponse(Call<String> call, Response<String> response) {

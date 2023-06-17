@@ -14,7 +14,7 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
-import com.major.qr.pojo.Doc;
+import com.major.qr.models.Doc;
 import com.major.qr.ui.LoginActivity;
 
 import org.json.JSONArray;
@@ -58,7 +58,8 @@ public class DocumentViewModel extends AndroidViewModel {
                 .setTag("uploadingFile")
                 .setPriority(Priority.HIGH)
                 .build()
-                .setUploadProgressListener((bytesUploaded, totalBytes) -> Log.d(TAG, "" + bytesUploaded))
+                .setUploadProgressListener((bytesUploaded, totalBytes) ->
+                        Log.d(TAG, "Bytes Uploaded" + bytesUploaded))
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -72,72 +73,6 @@ public class DocumentViewModel extends AndroidViewModel {
                     }
                 });
         return mutableLiveData;
-//        VolleyMultipartRequest multiPartRequest = new VolleyMultipartRequest(Request.Method.POST, URL, response -> {
-//            Log.d("upload", response.toString());
-////            try {
-////                JSONObject jsonObject = new JSONObject(response);
-////                Log.d(TAG, jsonObject.toString());
-////            } catch (JSONException e) {
-////                e.printStackTrace();
-////            }
-//        }, error -> {
-//            Log.d(TAG, "uploadDoc: No internet Connection");
-//        }) {
-//            @Override
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                Map<String, String> params = new HashMap<>();
-//                //Params
-//                return params;
-//            }
-//
-//            @Override
-//            protected Map<String, DataPart> getByteData() {
-//                Map<String, DataPart> params = new HashMap<>();
-//                String pdfName = System.currentTimeMillis() + ".jpg";
-//                params.put("jpg", new DataPart(fileLink, getFileData(fileLink)));
-//                return params;
-//            }
-//        };
-
-//        RequestQueue requestQueue = Volley.newRequestQueue(this.getApplication());
-//        requestQueue.add(multiPartRequest);
-//        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, response -> {
-//            Log.d("upload", response);
-//            try {
-//                JSONObject jsonObject = new JSONObject(response);
-//                Log.d(TAG, jsonObject.toString());
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }, error -> {
-//            Log.d(TAG, "uploadDoc: No internet Connection");
-//        }) {
-//            @Override
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                return new HashMap<String, String>() {{
-//                    put("documentType", "image");
-//                    put("document", fileLink);
-//                }};
-//            }
-//
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                return new HashMap<String, String>() {{
-//                    put("accept", "*/*");
-//                    put("Authorization", LoginActivity.ACCESS_TOKEN);
-//                    put("Content-Type", "multipart/form-data");
-//                }};
-//            }
-//        };
-//        {
-//            int socketTimeout = 30000;
-//            RetryPolicy policy = new DefaultRetryPolicy(socketTimeout,
-//                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-//            stringRequest.setRetryPolicy(policy);
-//            RequestQueue requestQueue = Volley.newRequestQueue(this.getApplication());
-//            requestQueue.add(stringRequest);
-//        }
     }
 
     /**

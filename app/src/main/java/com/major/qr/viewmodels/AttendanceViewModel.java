@@ -1,7 +1,10 @@
 package com.major.qr.viewmodels;
 
+import static com.major.qr.ui.LoginActivity.requestQueue;
+
 import android.app.Application;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -14,19 +17,23 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.major.qr.pojo.Attendance;
+import com.major.qr.models.Attendance;
+import com.major.qr.ui.AttendanceFragment;
 import com.major.qr.ui.LoginActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AttendanceViewModel extends AndroidViewModel {
     public static final String TAG = AttendanceViewModel.class.getSimpleName();
+    public final static String ATTENDANCE_API_URL = LoginActivity.URL + "/attendance/";
     MutableLiveData<ArrayList<Attendance>> list;
 
     public AttendanceViewModel(@NonNull Application application) {
@@ -54,11 +61,8 @@ public class AttendanceViewModel extends AndroidViewModel {
                     JSONObject object = jsonArray.getJSONObject(i);
                     Log.d(TAG, "loadAttendanceList: " + object);
                     if (!object.has("name")) continue;
-                    attendanceArrayList.add(new Attendance(
-                            object.getString("id"),
-                            object.getString("name"),
-                            object.getString("totalAttenders"),
-                            object.getString("creationDate")));
+                    final String creationDate = LocalDateTime.parse(object.getString("creationDate"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(DateTimeFormatter.ofPattern("yyyy MMM d, HH:mm:ss"));
+                    attendanceArrayList.add(new Attendance(object.getString("id"), object.getString("name"), object.getString("totalAttenders"), creationDate));
                 }
                 list.postValue(attendanceArrayList);
             } catch (JSONException e) {
@@ -90,9 +94,7 @@ public class AttendanceViewModel extends AndroidViewModel {
             }
         }};
         final String url = LoginActivity.URL + "/attendance/mark?uid=" + uid;
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,
-                params, response -> Log.d(TAG, response.toString()),
-                error -> Log.d(TAG, "uploadDoc: No internet Connection")) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params, response -> Log.d(TAG, response.toString()), error -> Log.d(TAG, "uploadDoc: No internet Connection")) {
             @Override
             public Map<String, String> getHeaders() {
                 return new HashMap<String, String>() {{
@@ -104,12 +106,39 @@ public class AttendanceViewModel extends AndroidViewModel {
         };
         {
             int socketTimeout = 30000;
-            RetryPolicy policy = new DefaultRetryPolicy(socketTimeout,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+            RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
             jsonObjectRequest.setRetryPolicy(policy);
             RequestQueue requestQueue = Volley.newRequestQueue(this.getApplication());
             requestQueue.add(jsonObjectRequest);
         }
         return mutableLiveData;
+    }
+
+    public MutableLiveData<JSONObject> createAttendance() {
+        MutableLiveData<JSONObject> res = new MutableLiveData<>();
+        final String url = ATTENDANCE_API_URL + "create";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, response -> {
+            Log.d(TAG, response);
+            try {
+                res.postValue(new JSONObject(response));
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }, error -> Log.d(TAG, "uploadDoc: No internet Connection")) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return new HashMap<String, String>() {{
+                    put("accept", "*/*");
+                    put("Authorization", LoginActivity.ACCESS_TOKEN);
+                }};
+            }
+        };
+        {
+            int socketTimeout = 30000;
+            RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+            stringRequest.setRetryPolicy(policy);
+            requestQueue.add(stringRequest);
+        }
+        return res;
     }
 }

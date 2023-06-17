@@ -22,7 +22,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.major.qr.R;
-import com.major.qr.pojo.Attendance;
+import com.major.qr.models.Attendance;
 import com.major.qr.ui.AttendeesActivity;
 import com.major.qr.ui.LoginActivity;
 

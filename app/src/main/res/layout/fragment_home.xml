@@ -12,14 +12,15 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:paddingBottom="48dp"
-        tools:listitem="@layout/item_doc" />
+        tools:listitem="@layout/item_qr" />
 
     <TextView
         android:id="@+id/empty_view"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
+        android:layout_centerInParent="true"
         android:gravity="center"
-        android:text="@string/state"
+        android:text="@string/qr_empty_state"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:visibility="gone" />

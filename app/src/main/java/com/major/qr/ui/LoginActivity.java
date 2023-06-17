@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.androidnetworking.AndroidNetworking;
 import com.major.qr.databinding.ActivityLoginBinding;
 import com.major.qr.viewmodels.LoginViewModel;
@@ -31,12 +33,16 @@ public class LoginActivity extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
     public ActivityLoginBinding binding;
     public LoginViewModel loginViewModel;
+    public static RequestQueue requestQueue;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Volley
+        requestQueue = Volley.newRequestQueue(this.getApplication());
 
         AndroidNetworking.initialize(getApplicationContext());
         AndroidNetworking.enableLogging();

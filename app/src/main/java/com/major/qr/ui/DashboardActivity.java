@@ -1,6 +1,7 @@
 package com.major.qr.ui;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -9,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -20,14 +20,11 @@ import com.major.qr.databinding.ActivityDashboardBinding;
 import com.major.qr.utils.CaptureActivityPortrait;
 import com.major.qr.viewmodels.AttendanceViewModel;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class DashboardActivity extends AppCompatActivity {
     public static final String TAG = DashboardActivity.class.getSimpleName();
+    final static String INSTANCE = "http://qray.s3-website.ap-south-1.amazonaws.com/access/";
     AttendanceViewModel viewModel;
     ActivityDashboardBinding binding;
-
     String qrResponse;
 
     @Override
@@ -39,40 +36,21 @@ public class DashboardActivity extends AppCompatActivity {
         binding.navigation.setOnItemSelectedListener(item -> {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             if (item.getItemId() == R.id.profile) {
-                Fragment newFragment = new ProfileFragment();
-                transaction.replace(R.id.fragment, newFragment);
+                transaction.replace(R.id.fragment, new ProfileFragment());
             } else if (item.getItemId() == R.id.home) {
-                Fragment newFragment = new HomeFragment();
-                transaction.replace(R.id.fragment, newFragment);
+                transaction.replace(R.id.fragment, new HomeFragment());
             } else if (item.getItemId() == R.id.attendance) {
-                Fragment newFragment = new AttendanceFragment();
-                transaction.replace(R.id.fragment, newFragment);
+                transaction.replace(R.id.fragment, new AttendanceFragment());
             } else if (item.getItemId() == R.id.documents) {
-                Fragment newFragment = new DocumentFragment();
-                transaction.replace(R.id.fragment, newFragment);
+                transaction.replace(R.id.fragment, new DocumentFragment());
             } else if (item.getItemId() == R.id.scan) {
                 IntentIntegrator intentIntegrator = new IntentIntegrator(this);
                 intentIntegrator.setPrompt("Scan QR for marking attendance");
                 intentIntegrator.setOrientationLocked(true);
                 intentIntegrator.setCaptureActivity(CaptureActivityPortrait.class);
                 intentIntegrator.initiateScan();
-                if (qrResponse == null) {
-                    Toast.makeText(this, "QR is null!", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-                Log.d(TAG, "AttendanceId: " + qrResponse);
-                try {
-                    JSONObject jsonObject = new JSONObject(qrResponse);
-                    final String uid = jsonObject.get("uid").toString();
-                    final String attendanceId = jsonObject.get("attendanceId").toString();
-                    viewModel.markAttendance(uid, attendanceId).observe(this, s -> {
-                        Toast.makeText(this, "Marked Successfully", Toast.LENGTH_LONG).show();
-                    });
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
             }
-            if(item.getItemId() != R.id.scan){
+            if (item.getItemId() != R.id.scan) {
                 transaction.commit();
                 item.setChecked(true);
                 item.setEnabled(true);
@@ -99,6 +77,29 @@ public class DashboardActivity extends AppCompatActivity {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
             } else {
                 qrResponse = intentResult.getContents();
+                Log.d(TAG, "qrResponse: " + qrResponse);
+                if (qrResponse.length() > 50) {
+                    final String url = INSTANCE + qrResponse;
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    this.startActivity(browserIntent);
+                } else {
+                    final String uid = LoginActivity.USERID;
+                    final String attendanceId = qrResponse;
+                    viewModel.markAttendance(uid, attendanceId).observe(this, s -> {
+                        Toast.makeText(this, "Marked Successfully", Toast.LENGTH_LONG).show();
+                    });
+//                    try {
+//                        JSONObject jsonObject = new JSONObject(qrResponse);
+//                        final String uid = jsonObject.get("uid").toString();
+//                        final String attendanceId = jsonObject.get("attendanceId").toString();
+//                        viewModel.markAttendance(uid, attendanceId).observe(this, s -> {
+//                            Toast.makeText(this, "Marked Successfully", Toast.LENGTH_LONG).show();
+//                        });
+//                    } catch (JSONException e) {
+//                        throw new RuntimeException(e);
+//                    }
+                }
+                Toast.makeText(this, "Found!", Toast.LENGTH_SHORT).show();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);

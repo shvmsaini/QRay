@@ -1,10 +1,12 @@
 package com.major.qr.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -25,7 +27,8 @@ public class DocumentFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentDocumentBinding.inflate(getLayoutInflater());
 
@@ -56,6 +59,22 @@ public class DocumentFragment extends Fragment {
             binding.clearAll.setVisibility(View.GONE);
         });
 
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        Log.d(TAG, "handleOnBackPressed() called");
+                        if (displayAdapter.selectedDocs.size() > 0) {
+                            binding.clearAll.performClick();
+                        } else {
+                            // OnBackPressed causing infinite loop
+                            requireActivity().finish();
+                        }
+                    }
+                });
+
         return binding.getRoot();
     }
+
 }
+

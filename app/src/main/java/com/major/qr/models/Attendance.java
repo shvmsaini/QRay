@@ -1,10 +1,10 @@
-package com.major.qr.pojo;
+package com.major.qr.models;
 
 public class Attendance {
-    String id;
-    String name;
-    String totalAttenders;
-    String creationDate;
+    private String id;
+    private String name;
+    private String totalAttenders;
+    private String creationDate;
 
     public Attendance(String id, String name, String totalAttenders, String creationDate) {
         this.id = id;
@@ -20,28 +20,28 @@ public class Attendance {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getTotalAttenders() {
-        return totalAttenders;
-    }
-
-    public String getCreationDate() {
-        return creationDate;
-    }
-
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getTotalAttenders() {
+        return totalAttenders;
+    }
+
     public void setTotalAttenders(String totalAttenders) {
         this.totalAttenders = totalAttenders;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
     }
 
     public void setCreationDate(String creationDate) {

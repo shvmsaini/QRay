@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.major.qr.R;
 import com.major.qr.databinding.FragmentDocumentBinding;
 import com.major.qr.dialog.UploadDialog;
-import com.major.qr.pojo.Doc;
+import com.major.qr.models.Doc;
 import com.major.qr.viewmodels.DocumentViewModel;
 
 import java.util.HashSet;
@@ -58,15 +57,13 @@ public class DocDisplayAdapter extends RecyclerView.Adapter<DocDisplayAdapter.It
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        Doc d = list.get(position);
-        holder.s1.setText(d.getDocumentType());
-        holder.s2.setText(d.getDocumentReference());
-        holder.s3.setText(d.getDocumentId());
-        holder.c1.setVisibility(View.GONE);
-//        holder.c1.setChecked(d.getState());
+        Doc doc = list.get(position);
+        holder.docType.setText(doc.getDocumentType());
+        holder.docId.setText(doc.getDocumentReference());
+        holder.docRef.setText(doc.getDocumentId());
         holder.updateButton.setVisibility(View.VISIBLE);
         holder.downloadButton.setVisibility(View.VISIBLE);
-        holder.downloadButton.setOnClickListener(view -> documentViewModel.getDocLink(d.getDocumentReference())
+        holder.downloadButton.setOnClickListener(view -> documentViewModel.getDocLink(doc.getDocumentReference())
                 .observe((LifecycleOwner) context, s -> {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(s.substring(1, s.length() - 1)));
                     context.startActivity(browserIntent);
@@ -78,7 +75,7 @@ public class DocDisplayAdapter extends RecyclerView.Adapter<DocDisplayAdapter.It
                 return false;
             }
             view.setBackgroundTintList(ColorStateList.valueOf(
-                    ContextCompat.getColor(context, R.color.darkest_blue)));
+                    ContextCompat.getColor(context, R.color.teal_700)));
             selectedDocs.add(list.get(position).getDocumentId());
             binding.clearAll.setVisibility(View.VISIBLE);
             return true;
@@ -97,13 +94,13 @@ public class DocDisplayAdapter extends RecyclerView.Adapter<DocDisplayAdapter.It
                 }
             } else {
                 view.setBackgroundTintList(ColorStateList.valueOf(
-                        ContextCompat.getColor(context, R.color.darkest_blue)));
+                        ContextCompat.getColor(context, R.color.teal_700)));
                 selectedDocs.add(list.get(position).getDocumentId());
             }
         });
 
         holder.updateButton.setOnClickListener(view -> {
-            UploadDialog uploadDialog = new UploadDialog(d.getDocumentReference(), documentViewModel);
+            UploadDialog uploadDialog = new UploadDialog(doc.getDocumentReference(), documentViewModel);
             uploadDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "Your Dialog");
         });
 
@@ -111,7 +108,7 @@ public class DocDisplayAdapter extends RecyclerView.Adapter<DocDisplayAdapter.It
             DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        documentViewModel.deleteDoc(d.getDocumentId(), d.getDocumentReference())
+                        documentViewModel.deleteDoc(doc.getDocumentId(), doc.getDocumentReference())
                                 .observe((LifecycleOwner) context, s -> {
                                     Toast.makeText(context, "Deleted successfully!",
                                             Toast.LENGTH_SHORT).show();
@@ -135,17 +132,15 @@ public class DocDisplayAdapter extends RecyclerView.Adapter<DocDisplayAdapter.It
     }
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView s1, s2, s3;
-        CheckBox c1;
+        TextView docType, docId, docRef;
         Button updateButton, downloadButton;
         ImageButton deleteButton;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
-            s1 = itemView.findViewById(R.id.textview1);
-            s2 = itemView.findViewById(R.id.textview2);
-            s3 = itemView.findViewById(R.id.textview3);
-            c1 = itemView.findViewById(R.id.checkbox);
+            docType = itemView.findViewById(R.id.doc_type);
+            docId = itemView.findViewById(R.id.doc_id);
+            docRef = itemView.findViewById(R.id.doc_ref);
             updateButton = itemView.findViewById(R.id.update_button);
             downloadButton = itemView.findViewById(R.id.download_button);
             deleteButton = itemView.findViewById(R.id.delete_button);

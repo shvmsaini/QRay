@@ -1,9 +1,9 @@
-package com.major.qr.pojo;
+package com.major.qr.models;
 
 public class Doc {
-    String documentType;
-    String documentReference;
-    String documentId;
+    private String documentType;
+    private String documentReference;
+    private String documentId;
 
     public Doc(String s1, String s2, String s3) {
         this.documentType = s1;

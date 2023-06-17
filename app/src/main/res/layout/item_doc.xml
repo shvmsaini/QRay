@@ -34,40 +34,35 @@
         app:layout_constraintVertical_bias="0.5">
 
         <TextView
-            android:id="@+id/textview1"
+            android:id="@+id/doc_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="300dp"
-            android:text="Other"
-            android:textColor="@color/white" />
-
-        <CheckBox
-            android:id="@+id/checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@id/textview1" />
-
-        <TextView
-            android:id="@+id/textview2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textview1"
-            android:text="Add Title here..."
+            android:text="Doc type"
             android:textColor="@color/white" />
 
         <TextView
-            android:id="@+id/textview3"
+            android:id="@+id/doc_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/textview2"
-            android:text="other"
+            android:layout_below="@id/doc_type"
+            android:text="Doc Id"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/doc_ref"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/doc_id"
+            android:text="Document Ref"
+            android:ellipsize="start"
+            android:maxLines="1"
             android:textColor="@color/white" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/textview3"
+            android:layout_below="@id/doc_ref"
             android:clipToPadding="false"
             android:divider="@drawable/empty_tall_divider"
             android:gravity="center"

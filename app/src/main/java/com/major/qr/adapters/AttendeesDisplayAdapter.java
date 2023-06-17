@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.major.qr.R;
-import com.major.qr.pojo.Attendees;
+import com.major.qr.models.Attendees;
 
 import java.util.ArrayList;
 
@@ -35,8 +35,8 @@ public class AttendeesDisplayAdapter extends RecyclerView.Adapter<AttendeesDispl
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Attendees attendees = list.get(position);
         holder.attendeeName.setText(attendees.getDisplayName());
-        holder.attendeeEmail.setText(attendees.getAddedDateTime());
-        holder.attendeeTime.setText(attendees.getEmail());
+        holder.attendeeEmail.setText(attendees.getEmail());
+        holder.attendeeTime.setText(attendees.getAddedDateTime());
     }
 
     @Override

@@ -9,10 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.major.qr.adapters.HomeDisplayAdapter;
-import com.major.qr.databinding.HomeBinding;
-import com.major.qr.pojo.Doc;
-import com.major.qr.pojo.Qr;
+import com.major.qr.adapters.QrDisplayAdapter;
+import com.major.qr.databinding.FragmentHomeBinding;
+import com.major.qr.models.Qr;
 import com.major.qr.viewmodels.QrLinkViewModel;
 
 import org.json.JSONException;
@@ -22,33 +21,37 @@ import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
     QrLinkViewModel viewModel;
-    HomeBinding binding;
-    HomeDisplayAdapter homeDisplayAdapter;
+    FragmentHomeBinding binding;
+    QrDisplayAdapter qrDisplayAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = HomeBinding.inflate(getLayoutInflater());
+        binding = FragmentHomeBinding.inflate(getLayoutInflater());
         viewModel = new QrLinkViewModel(requireActivity().getApplication());
 
         viewModel.getQrLink().observe(requireActivity(), jsonArray -> {
-            ArrayList<Doc> list = new ArrayList<>();
+            ArrayList<Qr> list = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); ++i) {
                 try {
                     JSONObject object = jsonArray.getJSONObject(i);
-                    Doc d = new Doc();
-                    d.setDocumentId(object.get("id").toString());
-                    d.setDocumentReference(object.getString("sessionName"));
-                    d.setDocumentType(object.getString("sessionValidTime"));
-                    list.add(d);
+                    Qr qr = new Qr();
+                    qr.setQrId(object.get("id").toString());
+                    qr.setSessionName(object.getString("sessionName"));
+                    qr.setToken(object.getString("token"));
+                    if (object.has("lastSeen")) {
+                        qr.setLastSeen(object.getString("lastSeen"));
+                    } else qr.setLastSeen("Not Accessed yet.");
+                    list.add(qr);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
             }
-            homeDisplayAdapter = new HomeDisplayAdapter(getContext(), list, viewModel);
-            binding.recyclerView.setAdapter(homeDisplayAdapter);
+            qrDisplayAdapter = new QrDisplayAdapter(getContext(), list, viewModel);
+            binding.recyclerView.setAdapter(qrDisplayAdapter);
             binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             binding.progressCircular.setVisibility(View.GONE);
+            if (list.size() == 0) binding.emptyView.setVisibility(View.VISIBLE);
         });
 
         return binding.getRoot();

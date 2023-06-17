@@ -13,13 +13,15 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.major.qr.pojo.Attendees;
+import com.major.qr.models.Attendees;
 import com.major.qr.ui.LoginActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,9 +53,14 @@ public class AttendeesViewModel extends AndroidViewModel {
                 for (int i = 0; i < jsonArray.length(); ++i) {
                     JSONObject object = jsonArray.getJSONObject(i);
                     Log.d(TAG, "loadAttendanceList: " + object);
+                     final String addedDateTime = LocalDateTime.parse(
+                             object.getString("addedDateTime"), DateTimeFormatter
+                                    .ofPattern("yyyy-MM-dd HH:mm:ss"))
+                            .format(DateTimeFormatter
+                                    .ofPattern("yyyy MMM d, HH:mm:ss"));
                     attendeesArrayList.add(new Attendees(
+                            addedDateTime,
                             object.getString("displayName"),
-                            object.getString("addedDateTime"),
                             object.getString("attendersId"),
                             object.getString("email")));
                 }
@@ -61,9 +68,7 @@ public class AttendeesViewModel extends AndroidViewModel {
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
-        }, error -> {
-            Log.e(TAG, "error: " + error.toString());
-        }) {
+        }, error -> Log.e(TAG, "error: " + error.toString())) {
             @Override
             public Map<String, String> getHeaders() {
                 return new HashMap<String, String>() {{

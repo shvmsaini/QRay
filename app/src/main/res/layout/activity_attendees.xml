@@ -6,16 +6,25 @@
     android:layout_height="match_parent"
     android:background="@color/primary_blue">
 
-    <ImageButton
-        android:id="@+id/back_button"
-        android:layout_width="48dp"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/topAppBarLayout"
+        android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:src="@drawable/baseline_arrow_back_24"
-        android:background="@color/zxing_transparent"
-        app:tint="@color/white"
+        android:background="@color/primary_blue"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:importantForAccessibility="no" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/primary_blue"
+            app:navigationIcon="@drawable/baseline_arrow_back_24"
+            app:navigationIconTint="@color/white"
+            app:title="Attendees"
+            app:titleTextColor="@color/white" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -25,9 +34,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/back_button"
+        app:layout_constraintTop_toBottomOf="@id/topAppBarLayout"
         app:layout_constraintVertical_bias="0.5"
-        tools:listitem="@layout/item_attendance" />
+        tools:listitem="@layout/item_attendee" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/show_qr"
