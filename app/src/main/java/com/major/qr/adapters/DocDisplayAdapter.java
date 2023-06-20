@@ -30,7 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class DocDisplayAdapter extends RecyclerView.Adapter<DocDisplayAdapter.ItemViewHolder> {
-    public static final String TAG = DocDisplayAdapter.class.getSimpleName();
+    public final String TAG = DocDisplayAdapter.class.getSimpleName();
     public List<Doc> list;
     public Context context;
     public DocumentViewModel documentViewModel;
@@ -138,9 +138,9 @@ public class DocDisplayAdapter extends RecyclerView.Adapter<DocDisplayAdapter.It
 
         public ItemViewHolder(View itemView) {
             super(itemView);
-            docType = itemView.findViewById(R.id.doc_type);
-            docId = itemView.findViewById(R.id.doc_id);
-            docRef = itemView.findViewById(R.id.doc_ref);
+            docType = itemView.findViewById(R.id.last_seen);
+            docId = itemView.findViewById(R.id.qr_name);
+            docRef = itemView.findViewById(R.id.qr_id);
             updateButton = itemView.findViewById(R.id.update_button);
             downloadButton = itemView.findViewById(R.id.download_button);
             deleteButton = itemView.findViewById(R.id.delete_button);

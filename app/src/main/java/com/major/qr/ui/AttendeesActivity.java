@@ -25,7 +25,7 @@ import com.major.qr.databinding.ActivityAttendeesBinding;
 import com.major.qr.viewmodels.AttendeesViewModel;
 
 public class AttendeesActivity extends AppCompatActivity {
-    public static final String TAG = AttendeesActivity.class.getSimpleName();
+    public final String TAG = AttendeesActivity.class.getSimpleName();
     AttendeesViewModel viewModel;
     private ActivityAttendeesBinding binding;
     private AttendeesDisplayAdapter adapter;
@@ -41,7 +41,7 @@ public class AttendeesActivity extends AppCompatActivity {
 
         viewModel = ViewModelProviders.of(this).get(AttendeesViewModel.class);
         viewModel.getAttendees(Id).observe(this, attendees -> {
-            adapter = new AttendeesDisplayAdapter(this, attendees);
+            adapter = new AttendeesDisplayAdapter(this, attendees, viewModel, Id);
             binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
             binding.recyclerView.addItemDecoration(new MaterialDividerItemDecoration(this,
                     LinearLayoutManager.VERTICAL));

@@ -1,4 +1,4 @@
-package com.major.qr.interfaces;
+package com.major.qr.services;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;

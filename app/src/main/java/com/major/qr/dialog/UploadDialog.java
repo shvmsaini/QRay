@@ -26,7 +26,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.major.qr.R;
 import com.major.qr.databinding.DialogUploadBinding;
-import com.major.qr.interfaces.UpdateService;
+import com.major.qr.services.UpdateService;
 import com.major.qr.ui.LoginActivity;
 import com.major.qr.utils.FileUtils;
 import com.major.qr.viewmodels.DocumentViewModel;
@@ -44,7 +44,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UploadDialog extends DialogFragment {
-    public static final String TAG = UploadDialog.class.getSimpleName();
+    public final String TAG = UploadDialog.class.getSimpleName();
     private final int FILE_PICK_REQUEST = 200;
     private final int REQUEST_CAPTURE_IMAGE = 201;
     private final DocumentViewModel documentViewModel;

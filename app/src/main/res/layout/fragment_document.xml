@@ -11,14 +11,13 @@
         android:id="@+id/clear_all"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
         android:clickable="true"
         android:gravity="center"
-        android:layout_marginEnd="16dp"
         android:text="Clear All"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/docRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
@@ -55,8 +54,7 @@
         android:id="@+id/docRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingBottom="55dp"
-        app:layout_constraintBaseline_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/clear_all"
@@ -66,15 +64,20 @@
         android:id="@+id/upload_document"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="45dp"
         android:contentDescription="Open document upload dialog"
         android:elevation="16dp"
         android:src="@drawable/baseline_add_24"
         app:backgroundTint="@color/zero_blue"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/white"
         app:useCompatPadding="true" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="55dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

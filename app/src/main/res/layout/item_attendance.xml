@@ -7,6 +7,8 @@
     android:layout_margin="16dp"
     android:background="@drawable/input_background"
     android:backgroundTint="@color/secondary_blue"
+    android:clickable="true"
+    android:focusable="true"
     tools:ignore="HardcodedText">
 
     <ImageButton
@@ -26,7 +28,6 @@
         android:id="@+id/linearLayout3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
         android:orientation="vertical"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"

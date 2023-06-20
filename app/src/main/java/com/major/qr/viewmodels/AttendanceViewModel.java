@@ -1,10 +1,10 @@
 package com.major.qr.viewmodels;
 
+import static com.major.qr.ui.LoginActivity.URL;
 import static com.major.qr.ui.LoginActivity.requestQueue;
 
 import android.app.Application;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -18,8 +18,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.major.qr.models.Attendance;
-import com.major.qr.ui.AttendanceFragment;
 import com.major.qr.ui.LoginActivity;
+import com.major.qr.volley.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,8 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AttendanceViewModel extends AndroidViewModel {
-    public static final String TAG = AttendanceViewModel.class.getSimpleName();
-    public final static String ATTENDANCE_API_URL = LoginActivity.URL + "/attendance/";
+    public final String TAG = AttendanceViewModel.class.getSimpleName();
+    public final static String ATTENDANCE_API_URL = URL + "/attendance/";
     MutableLiveData<ArrayList<Attendance>> list;
 
     public AttendanceViewModel(@NonNull Application application) {
@@ -49,7 +49,7 @@ public class AttendanceViewModel extends AndroidViewModel {
     }
 
     private void loadAttendanceList() {
-        final String url = LoginActivity.URL + "/attendance/get";
+        final String url = URL + "/attendance/get";
         RequestQueue queue = Volley.newRequestQueue(getApplication());
         StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
             Log.d(TAG, "response: " + response);
@@ -93,7 +93,7 @@ public class AttendanceViewModel extends AndroidViewModel {
                 throw new RuntimeException(e);
             }
         }};
-        final String url = LoginActivity.URL + "/attendance/mark?uid=" + uid;
+        final String url = URL + "/attendance/mark?uid=" + uid;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params, response -> Log.d(TAG, response.toString()), error -> Log.d(TAG, "uploadDoc: No internet Connection")) {
             @Override
             public Map<String, String> getHeaders() {
@@ -108,7 +108,6 @@ public class AttendanceViewModel extends AndroidViewModel {
             int socketTimeout = 30000;
             RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
             jsonObjectRequest.setRetryPolicy(policy);
-            RequestQueue requestQueue = Volley.newRequestQueue(this.getApplication());
             requestQueue.add(jsonObjectRequest);
         }
         return mutableLiveData;
@@ -134,11 +133,34 @@ public class AttendanceViewModel extends AndroidViewModel {
             }
         };
         {
-            int socketTimeout = 30000;
-            RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-            stringRequest.setRetryPolicy(policy);
+            stringRequest.setRetryPolicy(VolleySingleton.getRetryPolicy());
             requestQueue.add(stringRequest);
         }
         return res;
+    }
+
+    public MutableLiveData<JSONObject> deleteAttendance(String attendanceId) {
+        MutableLiveData<JSONObject> liveData = new MutableLiveData<>();
+        final String url = URL + "/attendance/delete?attendanceId=" + attendanceId;
+        RequestQueue queue = Volley.newRequestQueue(getApplication());
+        StringRequest request = new StringRequest(Request.Method.DELETE, url, response -> {
+            try {
+                liveData.postValue(new JSONObject(response));
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }, error -> {
+            liveData.postValue(null);
+            Log.e(TAG, "error: " + error.toString());
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return new HashMap<String, String>() {{
+                    put("Authorization", LoginActivity.ACCESS_TOKEN);
+                }};
+            }
+        };
+        queue.add(request);
+        return liveData;
     }
 }

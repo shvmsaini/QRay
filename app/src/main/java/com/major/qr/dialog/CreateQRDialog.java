@@ -76,30 +76,31 @@ public class CreateQRDialog extends DialogFragment {
         return builder.create();
     }
 
-    private void showQr(String token){
-           Dialog builder = new Dialog(getContext(), android.R.style.Theme_Light);
-            builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            builder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
-            builder.setOnDismissListener(dialogInterface -> {});
+    private void showQr(String token) {
+        Dialog builder = new Dialog(getContext(), android.R.style.Theme_Light);
+        builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        builder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+        builder.setOnDismissListener(dialogInterface -> {
+        });
 
-            ImageView imageView = new ImageView(getContext());
-            builder.addContentView(imageView, new RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            QRCodeWriter writer = new QRCodeWriter();
-            try {
-                BitMatrix bitMatrix = writer.encode(token, BarcodeFormat.QR_CODE, 512, 512);
-                int width = bitMatrix.getWidth();
-                int height = bitMatrix.getHeight();
-                Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                for (int x = 0; x < width; x++)
-                    for (int y = 0; y < height; y++)
-                        bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+        ImageView imageView = new ImageView(getContext());
+        builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        QRCodeWriter writer = new QRCodeWriter();
+        try {
+            BitMatrix bitMatrix = writer.encode(token, BarcodeFormat.QR_CODE, 512, 512);
+            int width = bitMatrix.getWidth();
+            int height = bitMatrix.getHeight();
+            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+            for (int x = 0; x < width; x++)
+                for (int y = 0; y < height; y++)
+                    bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
 
-                imageView.setImageBitmap(bmp);
-                builder.show();
+            imageView.setImageBitmap(bmp);
+            builder.show();
 
-            } catch (WriterException e) {
-                e.printStackTrace();
-            }
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -33,8 +33,8 @@ import java.util.Map;
  * @author shvmsaini
  */
 public class DocumentViewModel extends AndroidViewModel {
-    private static final String TAG = DocumentViewModel.class.getSimpleName();
     private static final String UPLOAD_MAPPING = "/documents/upload";
+    private final String TAG = DocumentViewModel.class.getSimpleName();
     private MutableLiveData<ArrayList<Doc>> docList;
     private HashMap<String, MutableLiveData<String>> documentReferencesMLD;
 

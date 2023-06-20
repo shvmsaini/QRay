@@ -1,7 +1,5 @@
 package com.major.qr.adapters;
 
-import static com.major.qr.ui.LoginActivity.URL;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,29 +13,26 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.major.qr.R;
 import com.major.qr.models.Attendance;
 import com.major.qr.ui.AttendeesActivity;
-import com.major.qr.ui.LoginActivity;
+import com.major.qr.viewmodels.AttendanceViewModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class AttendanceDisplayAdapter extends RecyclerView.Adapter<AttendanceDisplayAdapter.ItemViewHolder> {
-    public static final String TAG = AttendanceDisplayAdapter.class.getSimpleName();
+    public final String TAG = AttendanceDisplayAdapter.class.getSimpleName();
     ArrayList<Attendance> list;
     Context context;
+    AttendanceViewModel viewModel;
 
-    public AttendanceDisplayAdapter(Context context, ArrayList<Attendance> list) {
+    public AttendanceDisplayAdapter(Context context, ArrayList<Attendance> list, AttendanceViewModel viewModel) {
         this.context = context;
         this.list = list;
+        this.viewModel = viewModel;
     }
 
     @NonNull
@@ -62,36 +57,26 @@ public class AttendanceDisplayAdapter extends RecyclerView.Adapter<AttendanceDis
         });
 
         holder.deleteButton.setOnClickListener(v -> {
-            DialogInterface.OnClickListener dialogClickListener =
-                    (dialog, which) -> {
-                        switch (which) {
-                            case DialogInterface.BUTTON_POSITIVE:
-                                final String url = URL + "/attendance/delete?attendanceId=" + attendance.getId();
-                                RequestQueue queue = Volley.newRequestQueue(context);
-                                StringRequest request = new StringRequest(Request.Method.DELETE, url, response -> {
-                                    Toast.makeText(context, "Successfully deleted!", Toast.LENGTH_SHORT).show();
-                                    list.remove(position);
-                                    notifyItemRemoved(position);
-                                    notifyItemRangeChanged(position, getItemCount());
-                                }, error -> {
-                                    Toast.makeText(context, "Unable to delete!", Toast.LENGTH_SHORT).show();
-                                    Log.e("HttpClient", "error: " + error.toString());
-                                    holder.itemView.setVisibility(View.GONE);
-                                }) {
-                                    @Override
-                                    public Map<String, String> getHeaders() {
-                                        return new HashMap<String, String>() {{
-                                            put("Authorization", LoginActivity.ACCESS_TOKEN);
-                                        }};
-                                    }
-                                };
-                                queue.add(request);
-                                break;
+            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        viewModel.deleteAttendance(attendance.getId()).observe((LifecycleOwner) context, jsonObject -> {
+                            if (jsonObject == null) {
+                                Toast.makeText(context, "Unable to delete!", Toast.LENGTH_SHORT).show();
+                                holder.itemView.setVisibility(View.GONE);
+                                return;
+                            }
+                            Toast.makeText(context, "Successfully deleted!", Toast.LENGTH_SHORT).show();
+                            list.remove(position);
+                            notifyItemRemoved(position);
+                            notifyItemRangeChanged(position, getItemCount());
+                        });
+                        break;
 
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                break;
-                        }
-                    };
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            };
 
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setMessage("Are you sure?")

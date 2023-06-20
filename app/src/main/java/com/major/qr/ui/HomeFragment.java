@@ -42,6 +42,7 @@ public class HomeFragment extends Fragment {
                     if (object.has("lastSeen")) {
                         qr.setLastSeen(object.getString("lastSeen"));
                     } else qr.setLastSeen("Not Accessed yet.");
+                    qr.setSessionValidTime(object.getString("sessionValidTime"));
                     list.add(qr);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);

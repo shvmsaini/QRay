@@ -30,4 +30,6 @@
     <string name="qr_empty_state">No active QRs. \n Create QRs by holding on document items and clicking on + button.</string>
     <string name="session_name">Session Name</string>
     <string name="valid_time_in_hours">Valid Time (in hours)</string>
+    <string name="searchbar_hint">Search QRs</string>
+    <string name="open_in_browser">Open in Browser</string>
 </resources>

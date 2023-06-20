@@ -18,7 +18,7 @@ import com.major.qr.databinding.FragmentAttendanceBinding;
 import com.major.qr.viewmodels.AttendanceViewModel;
 
 public class AttendanceFragment extends Fragment {
-    private final static String TAG = AttendanceFragment.class.getSimpleName();
+    private final String TAG = AttendanceFragment.class.getSimpleName();
     AttendanceViewModel viewModel;
     FragmentAttendanceBinding binding;
     private AttendanceDisplayAdapter adapter;
@@ -31,7 +31,7 @@ public class AttendanceFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(AttendanceViewModel.class);
 
         viewModel.getAttendances().observe(getViewLifecycleOwner(), attendances -> {
-            adapter = new AttendanceDisplayAdapter(requireContext(), attendances);
+            adapter = new AttendanceDisplayAdapter(requireContext(), attendances, viewModel);
             binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
             binding.recyclerView.setAdapter(adapter);
         });

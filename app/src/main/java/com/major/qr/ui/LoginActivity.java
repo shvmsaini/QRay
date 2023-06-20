@@ -25,15 +25,15 @@ import com.major.qr.viewmodels.LoginViewModel;
 import org.json.JSONException;
 
 public class LoginActivity extends AppCompatActivity {
-    public final static String URL = "http://43.205.195.167:8080/api";
+    public final static String URL = "http://43.205.215.214:8080/api";
     public static String NAME;
     public static String EMAIL;
     public static String ACCESS_TOKEN;
     public static String USERID;
+    public static RequestQueue requestQueue;
     private final String TAG = getClass().getSimpleName();
     public ActivityLoginBinding binding;
     public LoginViewModel loginViewModel;
-    public static RequestQueue requestQueue;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

@@ -5,23 +5,25 @@ import android.graphics.Bitmap;
 
 import androidx.collection.LruCache;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
-import com.major.qr.volley.LruBitmapCache;
 
 /**
  * Singleton volley to populate request into single queue.
- *
+ * <p>
  * Sketch Project Studio
  * Created by Angga on 22/04/2016 22.58.
  */
 public class VolleySingleton {
     private static VolleySingleton mInstance;
+    private static Context mCtx;
+    private static RetryPolicy policy;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
-    private static Context mCtx;
 
     /**
      * Private constructor, only initialization from getInstance.
@@ -34,7 +36,7 @@ public class VolleySingleton {
 
         mImageLoader = new ImageLoader(mRequestQueue,
                 new ImageLoader.ImageCache() {
-//                    private final LruCache<String, Bitmap> cache = new LruBitmapCache(mCtx);
+                    //                    private final LruCache<String, Bitmap> cache = new LruBitmapCache(mCtx);
                     private final LruCache<String, Bitmap> cache = new LruBitmapCache();
 
                     @Override
@@ -60,6 +62,20 @@ public class VolleySingleton {
             mInstance = new VolleySingleton(context);
         }
         return mInstance;
+    }
+
+    /**
+     * Get RetryPolicy
+     *
+     * @return RetryPolicy
+     */
+    public static RetryPolicy getRetryPolicy() {
+        if (policy == null) {
+            final int socketTimeout = 30000;
+            policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        }
+        return policy;
     }
 
     /**

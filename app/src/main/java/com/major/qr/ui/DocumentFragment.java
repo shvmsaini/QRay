@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.divider.MaterialDividerItemDecoration;
 import com.major.qr.adapters.DocDisplayAdapter;
 import com.major.qr.databinding.FragmentDocumentBinding;
 import com.major.qr.dialog.CreateQRDialog;
@@ -20,10 +21,11 @@ import com.major.qr.viewmodels.DocumentViewModel;
 import com.major.qr.viewmodels.QrLinkViewModel;
 
 public class DocumentFragment extends Fragment {
-    private static final String TAG = DocumentFragment.class.getSimpleName();
+    private final String TAG = DocumentFragment.class.getSimpleName();
     private FragmentDocumentBinding binding;
     private DocumentViewModel documentViewModel;
     private DocDisplayAdapter displayAdapter;
+    private QrLinkViewModel qrLinkViewModel;
 
     @Nullable
     @Override
@@ -32,13 +34,15 @@ public class DocumentFragment extends Fragment {
         super.onCreate(savedInstanceState);
         binding = FragmentDocumentBinding.inflate(getLayoutInflater());
 
-        QrLinkViewModel qrLinkViewModel = new QrLinkViewModel(requireActivity().getApplication());
+        qrLinkViewModel = new QrLinkViewModel(requireActivity().getApplication());
         documentViewModel = new DocumentViewModel(requireActivity().getApplication());
 
         documentViewModel.getDocs().observe(getViewLifecycleOwner(), docs -> {
             displayAdapter = new DocDisplayAdapter(getContext(), docs, documentViewModel, binding);
-            binding.docRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            binding.docRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
             binding.docRecyclerView.setAdapter(displayAdapter);
+            binding.docRecyclerView.addItemDecoration(new MaterialDividerItemDecoration(requireContext(),
+                    LinearLayoutManager.VERTICAL));
             binding.progressCircular.setVisibility(View.GONE);
             if (docs.size() == 0) binding.emptyView.setVisibility(View.VISIBLE);
         });

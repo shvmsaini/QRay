@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginViewModel extends AndroidViewModel {
-    public static final String TAG = LoginViewModel.class.getSimpleName();
+    public final String TAG = LoginViewModel.class.getSimpleName();
 
     public LoginViewModel(@NonNull Application application) {
         super(application);

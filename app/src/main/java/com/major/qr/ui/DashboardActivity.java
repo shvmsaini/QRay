@@ -21,8 +21,8 @@ import com.major.qr.utils.CaptureActivityPortrait;
 import com.major.qr.viewmodels.AttendanceViewModel;
 
 public class DashboardActivity extends AppCompatActivity {
-    public static final String TAG = DashboardActivity.class.getSimpleName();
-    final static String INSTANCE = "http://qray.s3-website.ap-south-1.amazonaws.com/access/";
+    public static final String INSTANCE = "http://qray.s3-website.ap-south-1.amazonaws.com/access/";
+    public final String TAG = DashboardActivity.class.getSimpleName();
     AttendanceViewModel viewModel;
     ActivityDashboardBinding binding;
     String qrResponse;

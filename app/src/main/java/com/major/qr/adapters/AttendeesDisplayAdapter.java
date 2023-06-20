@@ -1,26 +1,38 @@
 package com.major.qr.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.major.qr.R;
-import com.major.qr.models.Attendees;
+import com.major.qr.models.Attendee;
+import com.major.qr.viewmodels.AttendeesViewModel;
 
 import java.util.ArrayList;
 
 public class AttendeesDisplayAdapter extends RecyclerView.Adapter<AttendeesDisplayAdapter.ItemViewHolder> {
-    ArrayList<Attendees> list;
+    public final String TAG = AttendeesDisplayAdapter.class.getSimpleName();
+    String attendanceId;
+    ArrayList<Attendee> list;
     Context context;
+    AttendeesViewModel viewModel;
 
-    public AttendeesDisplayAdapter(Context context, ArrayList<Attendees> list) {
+    public AttendeesDisplayAdapter(Context context, ArrayList<Attendee> list,
+                                   AttendeesViewModel viewModel, String attendanceId) {
         this.list = list;
         this.context = context;
+        this.viewModel = viewModel;
+        this.attendanceId = attendanceId;
     }
 
     @NonNull
@@ -33,10 +45,28 @@ public class AttendeesDisplayAdapter extends RecyclerView.Adapter<AttendeesDispl
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        Attendees attendees = list.get(position);
-        holder.attendeeName.setText(attendees.getDisplayName());
-        holder.attendeeEmail.setText(attendees.getEmail());
-        holder.attendeeTime.setText(attendees.getAddedDateTime());
+        Attendee attendee = list.get(position);
+        holder.attendeeName.setText(attendee.getDisplayName());
+        holder.attendeeEmail.setText(attendee.getEmail());
+        holder.attendeeTime.setText(attendee.getAddedDateTime());
+        holder.deleteAttendee.setOnClickListener(view -> {
+            DialogInterface.OnClickListener dialogClickListener = (dialogInterface, i) -> {
+                switch (i) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        viewModel.removeAttendee(attendee.getRecordId(), attendanceId)
+                                .observe((LifecycleOwner) context, jsonObject -> {
+                                    Toast.makeText(context, "Successfully removed!", Toast.LENGTH_SHORT).show();
+                                    list.remove(position);
+                                    this.notifyItemRemoved(position);
+                                });
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                }
+            };
+            new AlertDialog.Builder(context).setMessage("Are you sure?")
+                    .setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
+        });
     }
 
     @Override
@@ -46,12 +76,14 @@ public class AttendeesDisplayAdapter extends RecyclerView.Adapter<AttendeesDispl
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView attendeeName, attendeeEmail, attendeeTime;
+        ImageButton deleteAttendee;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
             attendeeName = itemView.findViewById(R.id.attendee_name);
             attendeeEmail = itemView.findViewById(R.id.attendee_email);
             attendeeTime = itemView.findViewById(R.id.attendee_time);
+            deleteAttendee = itemView.findViewById(R.id.delete_attendee);
         }
     }
 }

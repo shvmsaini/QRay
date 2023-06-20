@@ -1,15 +1,20 @@
 package com.major.qr.adapters;
 
+import static com.major.qr.ui.DashboardActivity.INSTANCE;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -32,6 +37,7 @@ import com.major.qr.viewmodels.QrLinkViewModel;
 import java.util.List;
 
 public class QrDisplayAdapter extends RecyclerView.Adapter<QrDisplayAdapter.ItemViewHolder> {
+    public final String TAG = QrDisplayAdapter.class.getSimpleName();
     public List<Qr> list;
     public Context context;
     QrLinkViewModel viewModel;
@@ -56,6 +62,7 @@ public class QrDisplayAdapter extends RecyclerView.Adapter<QrDisplayAdapter.Item
         holder.lastSeen.setText(qr.getLastSeen());
         holder.qrName.setText(qr.getSessionName());
         holder.qrId.setText(qr.getQrId());
+        holder.sessionValidTime.setText(qr.getSessionValidTime());
         holder.deleteButton.setOnClickListener(view -> {
             DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                 switch (which) {
@@ -82,9 +89,18 @@ public class QrDisplayAdapter extends RecyclerView.Adapter<QrDisplayAdapter.Item
             builder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
             builder.setOnDismissListener(dialogInterface -> {
             });
+            Button button = new Button(context);
+            button.setText(R.string.open_in_browser);
+            button.setOnClickListener(v -> {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(INSTANCE + qr.getToken()));
+                context.startActivity(browserIntent);
+            });
 
             ImageView imageView = new ImageView(context);
-            builder.addContentView(imageView, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            builder.addContentView(button, new RelativeLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             QRCodeWriter writer = new QRCodeWriter();
             try {
                 BitMatrix bitMatrix = writer.encode(qr.getToken(), BarcodeFormat.QR_CODE, 512, 512);
@@ -110,17 +126,18 @@ public class QrDisplayAdapter extends RecyclerView.Adapter<QrDisplayAdapter.Item
     }
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView lastSeen, qrName, qrId;
+        TextView lastSeen, qrName, qrId, sessionValidTime;
         ImageButton qrButton;
         ImageButton deleteButton;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
-            lastSeen = itemView.findViewById(R.id.doc_type);
-            qrName = itemView.findViewById(R.id.doc_id);
-            qrId = itemView.findViewById(R.id.doc_ref);
+            lastSeen = itemView.findViewById(R.id.last_seen);
+            qrName = itemView.findViewById(R.id.qr_name);
+            qrId = itemView.findViewById(R.id.qr_id);
             deleteButton = itemView.findViewById(R.id.delete_button);
             qrButton = itemView.findViewById(R.id.qr_button);
+            sessionValidTime = itemView.findViewById(R.id.session_valid_time_view);
         }
     }
 }

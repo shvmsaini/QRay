@@ -1,6 +1,7 @@
 package com.major.qr.viewmodels;
 
 import static com.major.qr.ui.LoginActivity.URL;
+import static com.major.qr.ui.LoginActivity.requestQueue;
 
 import android.app.Application;
 import android.util.Log;
@@ -25,7 +26,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class QrLinkViewModel extends AndroidViewModel {
-    public static final String TAG = QrLinkViewModel.class.getSimpleName();
+    public final String TAG = QrLinkViewModel.class.getSimpleName();
 
     public QrLinkViewModel(@NonNull Application application) {
         super(application);
@@ -36,7 +37,6 @@ public class QrLinkViewModel extends AndroidViewModel {
         MutableLiveData<JSONObject> mutableLiveData = new MutableLiveData<>();
         final String url = URL + String.format("/qrLink/create?sessionName=%1$s&type=%2$s&validTime=%3$s",
                 sessionName, type, validTime);
-        RequestQueue queue = Volley.newRequestQueue(getApplication());
         StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
             try {
                 mutableLiveData.postValue(new JSONObject(response));
@@ -65,12 +65,11 @@ public class QrLinkViewModel extends AndroidViewModel {
                 return jsonArray.toString().getBytes(StandardCharsets.UTF_8);
             }
         };
-        queue.add(request);
+        requestQueue.add(request);
         return mutableLiveData;
     }
 
     public MutableLiveData<JSONArray> getQrLink() {
-
         MutableLiveData<JSONArray> mutableLiveData = new MutableLiveData<>();
         final String url = URL + "/qrLink/get";
         RequestQueue queue = Volley.newRequestQueue(getApplication());

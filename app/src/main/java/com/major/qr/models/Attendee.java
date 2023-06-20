@@ -1,19 +1,29 @@
 package com.major.qr.models;
 
-public class Attendees {
+public class Attendee {
     private String addedDateTime;
     private String displayName;
     private String attendersId;
     private String email;
+    private String recordId;
 
-    public Attendees(String addedDateTime, String displayName, String attendersId, String email) {
+    public Attendee(String addedDateTime, String displayName, String attendersId, String email, String recordId) {
         this.addedDateTime = addedDateTime;
         this.displayName = displayName;
         this.attendersId = attendersId;
         this.email = email;
+        this.recordId = recordId;
     }
 
-    public Attendees() {
+    public Attendee() {
+    }
+
+    public String getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(String recordId) {
+        this.recordId = recordId;
     }
 
     public String getAddedDateTime() {

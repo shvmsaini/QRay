@@ -7,6 +7,7 @@ public class Qr {
     private ArrayList<Doc> docs;
     private String sessionName;
     private String creationDate;
+    private String sessionValidTime;
     private String qrId;
     private String token;
 
@@ -21,6 +22,14 @@ public class Qr {
     }
 
     public Qr() {
+    }
+
+    public String getSessionValidTime() {
+        return sessionValidTime;
+    }
+
+    public void setSessionValidTime(String sessionValidTime) {
+        this.sessionValidTime = sessionValidTime;
     }
 
     public String getQrId() {
