@@ -3,19 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/primary_blue"
     tools:ignore="HardcodedText">
-<!--    <com.google.android.material.appbar.AppBarLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content">-->
-<!--        <com.google.android.material.search.SearchBar-->
-<!--            android:id="@+id/search_bar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            style="@style/Widget.Material3.SearchBar"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:hint="@string/searchbar_hint" />-->
-<!--    </com.google.android.material.appbar.AppBarLayout>-->
+
+    <!--    <com.google.android.material.appbar.AppBarLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content">-->
+    <!--        <com.google.android.material.search.SearchBar-->
+    <!--            android:id="@+id/search_bar"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            style="@style/Widget.Material3.SearchBar"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:hint="@string/searchbar_hint" />-->
+    <!--    </com.google.android.material.appbar.AppBarLayout>-->
 
 
     <androidx.recyclerview.widget.RecyclerView

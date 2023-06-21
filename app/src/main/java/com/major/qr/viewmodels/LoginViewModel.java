@@ -1,6 +1,7 @@
 package com.major.qr.viewmodels;
 
 import static com.major.qr.ui.LoginActivity.URL;
+import static com.major.qr.ui.LoginActivity.requestQueue;
 
 import android.app.Application;
 import android.util.Log;
@@ -31,7 +32,6 @@ public class LoginViewModel extends AndroidViewModel {
     public MutableLiveData<JSONObject> getLoginData(String email, String password) {
         MutableLiveData<JSONObject> loginData = new MutableLiveData<>();
         final String url = URL + "/user/login";
-        RequestQueue queue = Volley.newRequestQueue(getApplication());
         StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
             try {
                 loginData.postValue(new JSONObject(response));
@@ -70,7 +70,7 @@ public class LoginViewModel extends AndroidViewModel {
                 }}.toString().getBytes(StandardCharsets.UTF_8);
             }
         };
-        queue.add(request);
+        requestQueue.add(request);
         return loginData;
     }
 }

@@ -76,7 +76,6 @@ public class UploadDialog extends DialogFragment {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.setType("*/*");
             intent.putExtra(Intent.EXTRA_MIME_TYPES, supportedMimeTypes);
-
             try {
                 startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), FILE_PICK_REQUEST);
             } catch (ActivityNotFoundException ex) {
@@ -126,7 +125,7 @@ public class UploadDialog extends DialogFragment {
 //                            file.getName(), RequestBody.create(MediaType.parse(
 //                                    requireActivity().getContentResolver().getType(Uri.fromFile(file))), file));
                     MultipartBody.Part filePart = MultipartBody.Part.createFormData("document",
-                            file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+                            file.getName(), RequestBody.create(MediaType.parse("image/png"), file));
                     MultipartBody body = new MultipartBody.Builder()
                             .addFormDataPart("documentReference", documentReference).build();
                     RequestBody body1 = RequestBody.create(MediaType.parse("multipart/form-data"), documentReference);

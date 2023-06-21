@@ -50,10 +50,9 @@ public class AttendanceDisplayAdapter extends RecyclerView.Adapter<AttendanceDis
         holder.attendanceName.setText(attendance.getName());
         holder.creationDate.setText(attendance.getCreationDate());
         holder.itemView.setOnClickListener(v -> {
-            Intent i = new Intent(context, AttendeesActivity.class);
-            Log.d(TAG, "onBindViewHolder: " + attendance.getId());
-            i.putExtra("Id", attendance.getId());
-            context.startActivity(i);
+            Log.d(TAG, "AttendanceId: " + attendance.getId());
+            context.startActivity(new Intent(context, AttendeesActivity.class)
+                    .putExtra("Id", attendance.getId()));
         });
 
         holder.deleteButton.setOnClickListener(v -> {
@@ -78,8 +77,7 @@ public class AttendanceDisplayAdapter extends RecyclerView.Adapter<AttendanceDis
                 }
             };
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("Are you sure?")
+            new AlertDialog.Builder(context).setMessage("Are you sure?")
                     .setPositiveButton("Yes", dialogClickListener)
                     .setNegativeButton("No", dialogClickListener)
                     .show();

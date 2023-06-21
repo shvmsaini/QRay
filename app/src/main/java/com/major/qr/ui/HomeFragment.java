@@ -1,6 +1,7 @@
 package com.major.qr.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +18,12 @@ import com.major.qr.viewmodels.QrLinkViewModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
+    private static final String TAG = HomeFragment.class.getSimpleName();
     QrLinkViewModel viewModel;
     FragmentHomeBinding binding;
     QrDisplayAdapter qrDisplayAdapter;
@@ -41,7 +45,7 @@ public class HomeFragment extends Fragment {
                     qr.setToken(object.getString("token"));
                     if (object.has("lastSeen")) {
                         qr.setLastSeen(object.getString("lastSeen"));
-                    } else qr.setLastSeen("Not Accessed yet.");
+                    } else qr.setLastSeen("Not Accessed yet");
                     qr.setSessionValidTime(object.getString("sessionValidTime"));
                     list.add(qr);
                 } catch (JSONException e) {

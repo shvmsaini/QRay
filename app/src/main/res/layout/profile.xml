@@ -63,7 +63,7 @@
             android:textColor="@color/white"
             android:textSize="18sp" />
 
-          <TextView
+        <TextView
             android:id="@+id/country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,10 +94,10 @@
     <Button
         android:id="@+id/logout_button"
         android:layout_width="wrap_content"
-        android:minWidth="100dp"
         android:layout_height="48dp"
         android:background="@drawable/button_style"
         android:backgroundTintMode="add"
+        android:minWidth="100dp"
         android:text="Logout"
         android:textColor="@color/white"
         app:backgroundTint="@null"
@@ -105,6 +105,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_profile_button"/>
+        app:layout_constraintTop_toBottomOf="@id/edit_profile_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

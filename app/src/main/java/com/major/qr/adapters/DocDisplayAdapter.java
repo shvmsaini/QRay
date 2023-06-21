@@ -1,28 +1,25 @@
 package com.major.qr.adapters;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.major.qr.R;
 import com.major.qr.databinding.FragmentDocumentBinding;
-import com.major.qr.dialog.UploadDialog;
+import com.major.qr.dialog.DocumentDetailDialog;
 import com.major.qr.models.Doc;
 import com.major.qr.viewmodels.DocumentViewModel;
 
@@ -58,72 +55,42 @@ public class DocDisplayAdapter extends RecyclerView.Adapter<DocDisplayAdapter.It
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Doc doc = list.get(position);
-        holder.docType.setText(doc.getDocumentType());
-        holder.docId.setText(doc.getDocumentReference());
-        holder.docRef.setText(doc.getDocumentId());
-        holder.updateButton.setVisibility(View.VISIBLE);
-        holder.downloadButton.setVisibility(View.VISIBLE);
-        holder.downloadButton.setOnClickListener(view -> documentViewModel.getDocLink(doc.getDocumentReference())
-                .observe((LifecycleOwner) context, s -> {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(s.substring(1, s.length() - 1)));
-                    context.startActivity(browserIntent);
-                }));
+        documentViewModel.getDocLink(doc.getDocumentReference()).observe((LifecycleOwner) context, link -> {
+            doc.setDocLink(link.substring(1, link.length() - 1));
+            Glide.with(context)
+                    .load(doc.getDocLink())
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .placeholder(R.drawable.placeholder_doc)
+                    .into(holder.imageView);
+        });
 
         holder.itemView.setOnLongClickListener(view -> {
             if (selectedDocs.contains(list.get(position).getDocumentId())) {
-                holder.itemView.performClick();
+                unSelect(holder, position);
                 return false;
             }
-            view.setBackgroundTintList(ColorStateList.valueOf(
-                    ContextCompat.getColor(context, R.color.teal_700)));
-            selectedDocs.add(list.get(position).getDocumentId());
-            binding.clearAll.setVisibility(View.VISIBLE);
+            select(holder, position);
             return true;
         });
 
         holder.itemView.setOnClickListener(view -> {
             if (selectedDocs.size() == 0) {
+                DocumentDetailDialog dialog = new DocumentDetailDialog(documentViewModel, doc, this, position);
+                dialog.show(((FragmentActivity) context).getSupportFragmentManager(), "Doc Dialog");
                 return;
             }
-            if (selectedDocs.contains(list.get(position).getDocumentId())) {
-                view.setBackgroundTintList(ColorStateList.valueOf(
-                        ContextCompat.getColor(context, R.color.secondary_blue)));
-                selectedDocs.remove(list.get(position).getDocumentId());
-                if (selectedDocs.size() == 0) {
-                    binding.clearAll.setVisibility(View.GONE);
-                }
-            } else {
-                view.setBackgroundTintList(ColorStateList.valueOf(
-                        ContextCompat.getColor(context, R.color.teal_700)));
-                selectedDocs.add(list.get(position).getDocumentId());
-            }
+            if (selectedDocs.contains(list.get(position).getDocumentId()))
+                unSelect(holder, position);
+            else
+                select(holder, position);
         });
 
-        holder.updateButton.setOnClickListener(view -> {
-            UploadDialog uploadDialog = new UploadDialog(doc.getDocumentReference(), documentViewModel);
-            uploadDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "Your Dialog");
-        });
+//        holder.updateButton.setOnClickListener(view -> {
+//            UploadDialog uploadDialog = new UploadDialog(doc.getDocumentReference(), documentViewModel);
+//            uploadDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "Your Dialog");
+//        });
 
-        holder.deleteButton.setOnClickListener(view -> {
-            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        documentViewModel.deleteDoc(doc.getDocumentId(), doc.getDocumentReference())
-                                .observe((LifecycleOwner) context, s -> {
-                                    Toast.makeText(context, "Deleted successfully!",
-                                            Toast.LENGTH_SHORT).show();
-                                    list.remove(position);
-                                    notifyItemRemoved(position);
-                                });
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                }
-            };
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("Are you sure?")
-                    .setPositiveButton("Yes", dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
-        });
+
     }
 
     @Override
@@ -131,19 +98,35 @@ public class DocDisplayAdapter extends RecyclerView.Adapter<DocDisplayAdapter.It
         return list.size();
     }
 
+    public void select(ItemViewHolder holder, int position) {
+//        holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.teal_200));
+        holder.itemView.setBackgroundTintList(ColorStateList.valueOf(
+                ContextCompat.getColor(context, R.color.teal_200)));
+        selectedDocs.add(list.get(position).getDocumentId());
+        binding.clearAll.setVisibility(View.VISIBLE);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            holder.itemView.setBackgroundResource(R.drawable.attendance_background);
+        }, 400);
+    }
+
+    public void unSelect(ItemViewHolder holder, int position) {
+        holder.itemView.setBackgroundTintList(ColorStateList.valueOf(
+                ContextCompat.getColor(context, R.color.primary_blue)));
+        selectedDocs.remove(list.get(position).getDocumentId());
+        if (selectedDocs.size() == 0)
+            binding.clearAll.setVisibility(View.GONE);
+//        holder.itemView.setBackgroundResource(R.drawable.document_background);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            holder.itemView.setBackgroundResource(R.drawable.document_background);
+        }, 400);
+    }
+
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView docType, docId, docRef;
-        Button updateButton, downloadButton;
-        ImageButton deleteButton;
+        ImageView imageView;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
-            docType = itemView.findViewById(R.id.last_seen);
-            docId = itemView.findViewById(R.id.qr_name);
-            docRef = itemView.findViewById(R.id.qr_id);
-            updateButton = itemView.findViewById(R.id.update_button);
-            downloadButton = itemView.findViewById(R.id.download_button);
-            deleteButton = itemView.findViewById(R.id.delete_button);
+            imageView = itemView.findViewById(R.id.imageView);
         }
     }
 }

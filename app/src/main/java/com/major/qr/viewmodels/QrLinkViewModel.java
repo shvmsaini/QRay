@@ -11,13 +11,11 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.major.qr.ui.LoginActivity;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
@@ -37,12 +35,8 @@ public class QrLinkViewModel extends AndroidViewModel {
         MutableLiveData<JSONObject> mutableLiveData = new MutableLiveData<>();
         final String url = URL + String.format("/qrLink/create?sessionName=%1$s&type=%2$s&validTime=%3$s",
                 sessionName, type, validTime);
-        StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
-            try {
-                mutableLiveData.postValue(new JSONObject(response));
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null, response -> {
+            mutableLiveData.postValue(response);
             Log.d(TAG, "success! response: " + response);
         }, error -> {
             mutableLiveData.postValue(null);
@@ -72,13 +66,8 @@ public class QrLinkViewModel extends AndroidViewModel {
     public MutableLiveData<JSONArray> getQrLink() {
         MutableLiveData<JSONArray> mutableLiveData = new MutableLiveData<>();
         final String url = URL + "/qrLink/get";
-        RequestQueue queue = Volley.newRequestQueue(getApplication());
-        StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
-            try {
-                mutableLiveData.postValue(new JSONArray(response));
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+            mutableLiveData.postValue(response);
             Log.d(TAG, "success! response: " + response);
         }, error -> {
             mutableLiveData.postValue(null);
@@ -91,20 +80,15 @@ public class QrLinkViewModel extends AndroidViewModel {
                 }};
             }
         };
-        queue.add(request);
+        requestQueue.add(request);
         return mutableLiveData;
     }
 
     public MutableLiveData<JSONObject> deleteQrLink(String qrId) {
         MutableLiveData<JSONObject> mutableLiveData = new MutableLiveData<>();
         final String url = URL + "/qrLink/delete?qrId=" + qrId;
-        RequestQueue queue = Volley.newRequestQueue(getApplication());
-        StringRequest request = new StringRequest(Request.Method.DELETE, url, response -> {
-            try {
-                mutableLiveData.postValue(new JSONObject(response));
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url, null, response -> {
+            mutableLiveData.postValue(response);
             Log.d(TAG, "success! response: " + response);
         }, error -> {
             mutableLiveData.postValue(null);
@@ -117,7 +101,7 @@ public class QrLinkViewModel extends AndroidViewModel {
                 }};
             }
         };
-        queue.add(request);
+        requestQueue.add(request);
         return mutableLiveData;
     }
 }

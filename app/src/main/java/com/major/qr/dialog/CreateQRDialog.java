@@ -48,26 +48,23 @@ public class CreateQRDialog extends DialogFragment {
         builder.setView(binding.getRoot()).setTitle("Create QR with selected documents");
 
         String[] sessionTypes = new String[]{"OTA", "Other", "Other"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_item, sessionTypes);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, sessionTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.sessionType.setAdapter(adapter);
 
         binding.create.setOnClickListener(view -> {
             if (binding.sessionName.getText() == null || binding.validTime.getText() == null) {
-                Toast.makeText(getContext(), "Please enter session name and valid time",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Please enter session name and valid time", Toast.LENGTH_SHORT).show();
                 return;
             }
-            viewModel.createQr(docs, binding.sessionName.getText().toString(),
-                    binding.sessionType.getSelectedItem().toString(),
-                    binding.validTime.getText().toString()).observe(this, jsonObject -> {
+            viewModel.createQr(docs, binding.sessionName.getText().toString(), binding.sessionType.getSelectedItem().toString(), binding.validTime.getText().toString()).observe(this, jsonObject -> {
                 try {
                     showQr(jsonObject.getString("token"));
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
                 Toast.makeText(getContext(), "QR Link created", Toast.LENGTH_SHORT).show();
+                dismiss();
             });
         });
 
@@ -81,11 +78,11 @@ public class CreateQRDialog extends DialogFragment {
         builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
         builder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
         builder.setOnDismissListener(dialogInterface -> {
+            // NOTHING
         });
 
         ImageView imageView = new ImageView(getContext());
-        builder.addContentView(imageView, new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        builder.addContentView(imageView, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         QRCodeWriter writer = new QRCodeWriter();
         try {
             BitMatrix bitMatrix = writer.encode(token, BarcodeFormat.QR_CODE, 512, 512);

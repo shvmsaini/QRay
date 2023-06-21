@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,6 +36,8 @@ import com.major.qr.R;
 import com.major.qr.models.Qr;
 import com.major.qr.viewmodels.QrLinkViewModel;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class QrDisplayAdapter extends RecyclerView.Adapter<QrDisplayAdapter.ItemViewHolder> {
@@ -63,6 +67,19 @@ public class QrDisplayAdapter extends RecyclerView.Adapter<QrDisplayAdapter.Item
         holder.qrName.setText(qr.getSessionName());
         holder.qrId.setText(qr.getQrId());
         holder.sessionValidTime.setText(qr.getSessionValidTime());
+        Duration duration = Duration.between(LocalDateTime.now(), LocalDateTime.parse(qr.getSessionValidTime()));
+        long seconds = duration.getSeconds();
+        long minutes = duration.toMinutes();
+        long hours = duration.toHours();
+        long days = duration.toDays();
+        if (seconds <= 0) {
+            holder.itemView.setBackgroundTintList(ColorStateList.valueOf(
+                ContextCompat.getColor(context, R.color.delete)));
+            holder.sessionValidTime.setText(R.string.expired);
+        }
+        else if (minutes <= 100L) holder.sessionValidTime.setText(minutes + " Minutes Remains");
+        else if (hours <= 100L) holder.sessionValidTime.setText(hours + " Hours Remains");
+        else holder.sessionValidTime.setText(days + " Days Remains");
         holder.deleteButton.setOnClickListener(view -> {
             DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                 switch (which) {
@@ -72,14 +89,12 @@ public class QrDisplayAdapter extends RecyclerView.Adapter<QrDisplayAdapter.Item
                                     Toast.makeText(context, "Successfully deleted!", Toast.LENGTH_SHORT).show();
                                     list.remove(position);
                                     notifyItemRemoved(position);
-
                                 });
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                 }
             };
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("Are you sure?")
+            new AlertDialog.Builder(context).setMessage("Are you sure?")
                     .setPositiveButton("Yes", dialogClickListener)
                     .setNegativeButton("No", dialogClickListener).show();
         });
@@ -132,9 +147,9 @@ public class QrDisplayAdapter extends RecyclerView.Adapter<QrDisplayAdapter.Item
 
         public ItemViewHolder(View itemView) {
             super(itemView);
-            lastSeen = itemView.findViewById(R.id.last_seen);
-            qrName = itemView.findViewById(R.id.qr_name);
-            qrId = itemView.findViewById(R.id.qr_id);
+            lastSeen = itemView.findViewById(R.id.doc_type);
+            qrName = itemView.findViewById(R.id.doc_name);
+            qrId = itemView.findViewById(R.id.doc_id);
             deleteButton = itemView.findViewById(R.id.delete_button);
             qrButton = itemView.findViewById(R.id.qr_button);
             sessionValidTime = itemView.findViewById(R.id.session_valid_time_view);

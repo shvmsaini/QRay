@@ -4,6 +4,7 @@ public class Doc {
     private String documentType;
     private String documentReference;
     private String documentId;
+    private String docLink;
 
     public Doc(String s1, String s2, String s3) {
         this.documentType = s1;
@@ -12,6 +13,14 @@ public class Doc {
     }
 
     public Doc() {
+    }
+
+    public String getDocLink() {
+        return docLink;
+    }
+
+    public void setDocLink(String docLink) {
+        this.docLink = docLink;
     }
 
     public String getDocumentType() {

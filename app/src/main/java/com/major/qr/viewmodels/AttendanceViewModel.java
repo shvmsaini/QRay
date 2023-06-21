@@ -10,13 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.RetryPolicy;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.major.qr.models.Attendance;
 import com.major.qr.ui.LoginActivity;
 import com.major.qr.volley.VolleySingleton;
@@ -32,8 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AttendanceViewModel extends AndroidViewModel {
-    public final String TAG = AttendanceViewModel.class.getSimpleName();
     public final static String ATTENDANCE_API_URL = URL + "/attendance/";
+    public final String TAG = AttendanceViewModel.class.getSimpleName();
     MutableLiveData<ArrayList<Attendance>> list;
 
     public AttendanceViewModel(@NonNull Application application) {
@@ -50,27 +47,22 @@ public class AttendanceViewModel extends AndroidViewModel {
 
     private void loadAttendanceList() {
         final String url = URL + "/attendance/get";
-        RequestQueue queue = Volley.newRequestQueue(getApplication());
-        StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
-            Log.d(TAG, "response: " + response);
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, jsonArray -> {
+            Log.d(TAG, "response: " + jsonArray.toString());
             ArrayList<Attendance> attendanceArrayList = new ArrayList<>();
             try {
-                JSONArray jsonArray = new JSONArray(response);
-                Log.d(TAG, "jsonArray = " + jsonArray);
                 for (int i = 0; i < jsonArray.length(); ++i) {
                     JSONObject object = jsonArray.getJSONObject(i);
                     Log.d(TAG, "loadAttendanceList: " + object);
                     if (!object.has("name")) continue;
-                    final String creationDate = LocalDateTime.parse(object.getString("creationDate"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(DateTimeFormatter.ofPattern("yyyy MMM d, HH:mm:ss"));
+                    final String creationDate = LocalDateTime.parse(object.getString("creationDate"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(DateTimeFormatter.ofPattern("yyyy MMM d, KK:mm:ss"));
                     attendanceArrayList.add(new Attendance(object.getString("id"), object.getString("name"), object.getString("totalAttenders"), creationDate));
                 }
                 list.postValue(attendanceArrayList);
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
-        }, error -> {
-            Log.e("HttpClient", "error: " + error.toString());
-        }) {
+        }, error -> Log.e(TAG, "error: " + error.toString())) {
             @Override
             public Map<String, String> getHeaders() {
                 return new HashMap<String, String>() {{
@@ -78,7 +70,7 @@ public class AttendanceViewModel extends AndroidViewModel {
                 }};
             }
         };
-        queue.add(request);
+        requestQueue.add(request);
     }
 
     public MutableLiveData<String> markAttendance(String uid, String attendanceId) {
@@ -94,7 +86,9 @@ public class AttendanceViewModel extends AndroidViewModel {
             }
         }};
         final String url = URL + "/attendance/mark?uid=" + uid;
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params, response -> Log.d(TAG, response.toString()), error -> Log.d(TAG, "uploadDoc: No internet Connection")) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params,
+                response -> Log.d(TAG, response.toString()),
+                error -> Log.d(TAG, "uploadDoc: No internet Connection")) {
             @Override
             public Map<String, String> getHeaders() {
                 return new HashMap<String, String>() {{
@@ -104,26 +98,15 @@ public class AttendanceViewModel extends AndroidViewModel {
                 }};
             }
         };
-        {
-            int socketTimeout = 30000;
-            RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-            jsonObjectRequest.setRetryPolicy(policy);
-            requestQueue.add(jsonObjectRequest);
-        }
+        requestQueue.add(jsonObjectRequest.setRetryPolicy(VolleySingleton.getRetryPolicy()));
         return mutableLiveData;
     }
 
     public MutableLiveData<JSONObject> createAttendance() {
         MutableLiveData<JSONObject> res = new MutableLiveData<>();
         final String url = ATTENDANCE_API_URL + "create";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, response -> {
-            Log.d(TAG, response);
-            try {
-                res.postValue(new JSONObject(response));
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-        }, error -> Log.d(TAG, "uploadDoc: No internet Connection")) {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                res::postValue, error -> Log.d(TAG, "uploadDoc: No internet Connection")) {
             @Override
             public Map<String, String> getHeaders() {
                 return new HashMap<String, String>() {{
@@ -132,24 +115,15 @@ public class AttendanceViewModel extends AndroidViewModel {
                 }};
             }
         };
-        {
-            stringRequest.setRetryPolicy(VolleySingleton.getRetryPolicy());
-            requestQueue.add(stringRequest);
-        }
+        requestQueue.add(request.setRetryPolicy(VolleySingleton.getRetryPolicy()));
         return res;
     }
 
     public MutableLiveData<JSONObject> deleteAttendance(String attendanceId) {
         MutableLiveData<JSONObject> liveData = new MutableLiveData<>();
         final String url = URL + "/attendance/delete?attendanceId=" + attendanceId;
-        RequestQueue queue = Volley.newRequestQueue(getApplication());
-        StringRequest request = new StringRequest(Request.Method.DELETE, url, response -> {
-            try {
-                liveData.postValue(new JSONObject(response));
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-        }, error -> {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url, null,
+                liveData::postValue, error -> {
             liveData.postValue(null);
             Log.e(TAG, "error: " + error.toString());
         }) {
@@ -160,7 +134,7 @@ public class AttendanceViewModel extends AndroidViewModel {
                 }};
             }
         };
-        queue.add(request);
+        requestQueue.add(request);
         return liveData;
     }
 }

@@ -53,6 +53,9 @@
             android:name=".ui.DashboardActivity"
             android:launchMode="singleTop" />
         <activity
+            android:name=".utils.WebViewActivity"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".utils.CaptureActivityPortrait"
             android:screenOrientation="sensorPortrait"
             android:stateNotNeeded="true"

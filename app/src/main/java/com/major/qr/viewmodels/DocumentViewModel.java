@@ -1,5 +1,8 @@
 package com.major.qr.viewmodels;
 
+import static com.major.qr.ui.LoginActivity.URL;
+import static com.major.qr.ui.LoginActivity.requestQueue;
+
 import android.app.Application;
 import android.util.Log;
 
@@ -7,9 +10,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
@@ -116,8 +117,7 @@ public class DocumentViewModel extends AndroidViewModel {
         if (docList != null)
             return docList;
         docList = new MutableLiveData<>();
-        final String url = LoginActivity.URL + "/documents/getDocuments";
-        RequestQueue queue = Volley.newRequestQueue(getApplication());
+        final String url = URL + "/documents/getDocuments";
         StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
             ArrayList<Doc> docs = new ArrayList<>();
             try {
@@ -130,6 +130,7 @@ public class DocumentViewModel extends AndroidViewModel {
                             object.getString("documentReference"),
                             object.getString("documentId"));
                     docs.add(d);
+
                 }
                 docList.postValue(docs);
             } catch (JSONException e) {
@@ -143,7 +144,7 @@ public class DocumentViewModel extends AndroidViewModel {
                 }};
             }
         };
-        queue.add(request);
+        requestQueue.add(request);
         return docList;
     }
 
@@ -156,8 +157,7 @@ public class DocumentViewModel extends AndroidViewModel {
         if (!documentReferencesMLD.containsKey(documentReference)) {
             documentReferencesMLD.put(documentReference, new MutableLiveData<>());
             Log.d(TAG, "getDocLink: ");
-            final String url = LoginActivity.URL + "/documents/download/";
-            RequestQueue queue = Volley.newRequestQueue(getApplication());
+            final String url = URL + "/documents/download/";
             StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
                 Log.d(TAG, response);
                 documentReferencesMLD.get(documentReference).postValue(response);
@@ -175,7 +175,7 @@ public class DocumentViewModel extends AndroidViewModel {
                     return documentReference.getBytes(StandardCharsets.UTF_8);
                 }
             };
-            queue.add(request);
+            requestQueue.add(request);
         }
         return documentReferencesMLD.get(documentReference);
     }
@@ -211,9 +211,8 @@ public class DocumentViewModel extends AndroidViewModel {
      */
     public MutableLiveData<Object> deleteDoc(String documentId, String docReference) {
         MutableLiveData<Object> mutableLiveData = new MutableLiveData<>();
-        final String url = LoginActivity.URL + "/documents/delete/" + "?documentId=" + documentId
+        final String url = URL + "/documents/delete/" + "?documentId=" + documentId
                 + "&documentReference=" + docReference;
-        RequestQueue queue = Volley.newRequestQueue(getApplication());
         StringRequest request = new StringRequest(Request.Method.DELETE, url, response -> {
             Log.d(TAG, response);
             mutableLiveData.postValue(response);
@@ -226,7 +225,7 @@ public class DocumentViewModel extends AndroidViewModel {
                 }};
             }
         };
-        queue.add(request);
+        requestQueue.add(request);
         return mutableLiveData;
     }
 }
