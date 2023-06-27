@@ -36,47 +36,127 @@
                 android:src="@drawable/placeholder" />
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/profile_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="sans-serif"
-            android:text="Your Name"
-            android:textColor="@color/white"
-            android:textSize="32sp" />
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
 
-        <TextView
+            <EditText
+                android:id="@+id/first_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints="name"
+                android:fontFamily="sans-serif"
+                android:inputType="textPersonName"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="Your"
+                android:textColor="@color/white"
+                android:textSize="32sp" />
+
+            <Space
+                android:id="@+id/spacer"
+                android:layout_width="8dp"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/last_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints="name"
+                android:fontFamily="sans-serif"
+                android:inputType="textPersonName"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="Name"
+                android:textColor="@color/white"
+                android:textSize="32sp" />
+        </LinearLayout>
+
+        <EditText
             android:id="@+id/profile_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:autofillHints="emailAddress"
+            android:inputType="textEmailAddress"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
             android:text="example@email.com"
             android:textColor="#A9A9A9"
             android:textSize="22sp" />
 
-        <TextView
-            android:id="@+id/phone_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="+919876543210"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/country"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="🇮🇳 Indian"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/country_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:paddingEnd="4dp"
+                android:paddingBottom="11dp"
+                android:text="+91"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/phone_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:autofillHints="phone"
+                android:gravity="center"
+                android:inputType="phone"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="9876543210"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/country_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:paddingEnd="4dp"
+                android:paddingBottom="12dp"
+                android:text="🇮🇳"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/country"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="Indian"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+        </LinearLayout>
 
     </LinearLayout>
 
     <Button
         android:id="@+id/edit_profile_button"
-        android:layout_width="253dp"
+        android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:background="@drawable/button_style"
         android:backgroundTintMode="add"
@@ -85,9 +165,9 @@
         android:text="Edit profile"
         android:textColor="@color/white"
         app:backgroundTint="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/logout_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
 
@@ -95,6 +175,7 @@
         android:id="@+id/logout_button"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
+        android:layout_marginBottom="50dp"
         android:background="@drawable/button_style"
         android:backgroundTintMode="add"
         android:minWidth="100dp"
@@ -105,6 +186,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_profile_button" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_profile_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

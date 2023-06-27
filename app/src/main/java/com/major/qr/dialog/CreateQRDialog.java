@@ -45,7 +45,7 @@ public class CreateQRDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         binding = DialogCreateqrBinding.inflate(getLayoutInflater());
-        builder.setView(binding.getRoot()).setTitle("Create QR with selected documents");
+        builder.setView(binding.getRoot());
 
         String[] sessionTypes = new String[]{"OTA", "Other", "Other"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, sessionTypes);
@@ -57,7 +57,10 @@ public class CreateQRDialog extends DialogFragment {
                 Toast.makeText(getContext(), "Please enter session name and valid time", Toast.LENGTH_SHORT).show();
                 return;
             }
-            viewModel.createQr(docs, binding.sessionName.getText().toString(), binding.sessionType.getSelectedItem().toString(), binding.validTime.getText().toString()).observe(this, jsonObject -> {
+            final String sessionType = binding.sessionType.getSelectedItem().toString();
+            final String sessionName = binding.sessionName.getText().toString();
+            final String validTime = binding.validTime.getText().toString();
+            viewModel.createQr(docs, sessionName, sessionType, validTime).observe(this, jsonObject -> {
                 try {
                     showQr(jsonObject.getString("token"));
                 } catch (JSONException e) {
@@ -70,7 +73,9 @@ public class CreateQRDialog extends DialogFragment {
 
         binding.docs.setText(Arrays.toString(docs.toArray()));
 
-        return builder.create();
+        Dialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        return dialog;
     }
 
     private void showQr(String token) {

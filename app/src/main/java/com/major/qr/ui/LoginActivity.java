@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -25,7 +26,7 @@ import com.major.qr.viewmodels.LoginViewModel;
 import org.json.JSONException;
 
 public class LoginActivity extends AppCompatActivity {
-    public final static String URL = "http://43.205.215.214:8080/api";
+    public final static String URL = "http://43.204.29.197:8080/api";
     public static String NAME;
     public static String EMAIL;
     public static String ACCESS_TOKEN;
@@ -42,12 +43,12 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // Volley
-        requestQueue = Volley.newRequestQueue(this.getApplication());
+        requestQueue = Volley.newRequestQueue(getApplication());
 
         AndroidNetworking.initialize(getApplicationContext());
         AndroidNetworking.enableLogging();
 
-        loginViewModel = new LoginViewModel(getApplication());
+        loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
         SharedPreferences preferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 
         // For signup activity link
@@ -59,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(signupIntent);
             }
         }, 23, 29, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
         binding.signup.setText(signupSpan);
         binding.signup.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -95,7 +97,8 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putString("name", NAME);
                 editor.putString("email", EMAIL);
                 editor.apply();
-                Intent intent = new Intent(this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent intent = new Intent(this, DashboardActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
                 Toast.makeText(getApplication(), "Success! Logging in...", Toast.LENGTH_SHORT).show();
@@ -113,7 +116,8 @@ public class LoginActivity extends AppCompatActivity {
             Log.d(TAG, "USERID = " + USERID);
             Log.d(TAG, "NAME = " + NAME);
             Log.d(TAG, "EMAIL = " + EMAIL);
-            Intent intent = new Intent(this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Intent intent = new Intent(this, DashboardActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
         }

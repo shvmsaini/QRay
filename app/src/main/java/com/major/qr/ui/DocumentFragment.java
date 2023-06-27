@@ -10,6 +10,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.divider.MaterialDividerItemDecoration;
@@ -22,7 +23,7 @@ import com.major.qr.viewmodels.QrLinkViewModel;
 
 public class DocumentFragment extends Fragment {
     private final String TAG = DocumentFragment.class.getSimpleName();
-    private FragmentDocumentBinding binding;
+    private FragmentDocumentBinding     binding;
     private DocumentViewModel documentViewModel;
     private DocDisplayAdapter displayAdapter;
     private QrLinkViewModel qrLinkViewModel;
@@ -34,8 +35,8 @@ public class DocumentFragment extends Fragment {
         super.onCreate(savedInstanceState);
         binding = FragmentDocumentBinding.inflate(getLayoutInflater());
 
-        qrLinkViewModel = new QrLinkViewModel(requireActivity().getApplication());
-        documentViewModel = new DocumentViewModel(requireActivity().getApplication());
+        qrLinkViewModel = new ViewModelProvider(requireActivity()).get(QrLinkViewModel.class);
+        documentViewModel = new ViewModelProvider(requireActivity()).get(DocumentViewModel.class);
 
         documentViewModel.getDocs().observe(getViewLifecycleOwner(), docs -> {
             displayAdapter = new DocDisplayAdapter(getContext(), docs, documentViewModel, binding);
@@ -45,6 +46,7 @@ public class DocumentFragment extends Fragment {
                     LinearLayoutManager.VERTICAL));
             binding.progressCircular.setVisibility(View.GONE);
             if (docs.size() == 0) binding.emptyView.setVisibility(View.VISIBLE);
+            else binding.emptyView.setVisibility(View.GONE);
         });
 
         binding.uploadDocument.setOnClickListener(view -> {

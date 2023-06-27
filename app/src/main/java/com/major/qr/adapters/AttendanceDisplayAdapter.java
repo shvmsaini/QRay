@@ -21,12 +21,14 @@ import com.major.qr.models.Attendance;
 import com.major.qr.ui.AttendeesActivity;
 import com.major.qr.viewmodels.AttendanceViewModel;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class AttendanceDisplayAdapter extends RecyclerView.Adapter<AttendanceDisplayAdapter.ItemViewHolder> {
     public final String TAG = AttendanceDisplayAdapter.class.getSimpleName();
+    private final Context context;
     ArrayList<Attendance> list;
-    Context context;
     AttendanceViewModel viewModel;
 
     public AttendanceDisplayAdapter(Context context, ArrayList<Attendance> list, AttendanceViewModel viewModel) {
@@ -48,7 +50,10 @@ public class AttendanceDisplayAdapter extends RecyclerView.Adapter<AttendanceDis
         Attendance attendance = list.get(position);
         holder.totalAttendees.setText(attendance.getTotalAttenders());
         holder.attendanceName.setText(attendance.getName());
-        holder.creationDate.setText(attendance.getCreationDate());
+        final String creationDate = LocalDateTime.parse(attendance.getCreationDate(),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                .format(DateTimeFormatter.ofPattern("yyyy MMM d, KK:mm:ss"));
+        holder.creationDate.setText(creationDate);
         holder.itemView.setOnClickListener(v -> {
             Log.d(TAG, "AttendanceId: " + attendance.getId());
             context.startActivity(new Intent(context, AttendeesActivity.class)
@@ -68,7 +73,6 @@ public class AttendanceDisplayAdapter extends RecyclerView.Adapter<AttendanceDis
                             Toast.makeText(context, "Successfully deleted!", Toast.LENGTH_SHORT).show();
                             list.remove(position);
                             notifyItemRemoved(position);
-                            notifyItemRangeChanged(position, getItemCount());
                         });
                         break;
 

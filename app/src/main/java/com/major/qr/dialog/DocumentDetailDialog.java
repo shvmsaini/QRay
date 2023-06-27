@@ -3,6 +3,8 @@ package com.major.qr.dialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -10,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.LifecycleOwner;
 
@@ -47,11 +50,15 @@ public class DocumentDetailDialog extends DialogFragment {
         binding.docId.setText(doc.getDocumentId());
         binding.docRef.setText(doc.getDocumentReference());
 
-        Glide.with(requireContext())
-                .load(doc.getDocLink())
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .placeholder(R.drawable.placeholder_doc)
-                .into(binding.imageView);
+        if (doc.getDocumentType().equals("pdf"))
+            binding.imageView.setImageDrawable(
+                    AppCompatResources.getDrawable(requireContext(), R.drawable.pdf_placeholder));
+        else
+            Glide.with(requireContext())
+                    .load(doc.getDocLink())
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .placeholder(R.drawable.placeholder_doc)
+                    .into(binding.imageView);
 
         binding.updateButton.setOnClickListener(view -> {
             UploadDialog uploadDialog = new UploadDialog(doc.getDocumentReference(), viewModel);
@@ -88,6 +95,9 @@ public class DocumentDetailDialog extends DialogFragment {
                     .setPositiveButton("Yes", dialogClickListener)
                     .setNegativeButton("No", dialogClickListener).show();
         });
-        return builder.create();
+
+        Dialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        return dialog;
     }
 }

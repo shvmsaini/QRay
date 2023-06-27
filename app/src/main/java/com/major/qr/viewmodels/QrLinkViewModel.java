@@ -3,12 +3,10 @@ package com.major.qr.viewmodels;
 import static com.major.qr.ui.LoginActivity.URL;
 import static com.major.qr.ui.LoginActivity.requestQueue;
 
-import android.app.Application;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -23,12 +21,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class QrLinkViewModel extends AndroidViewModel {
+public class QrLinkViewModel extends ViewModel {
     public final String TAG = QrLinkViewModel.class.getSimpleName();
-
-    public QrLinkViewModel(@NonNull Application application) {
-        super(application);
-    }
+    MutableLiveData<JSONArray> mutableLiveData;
 
     public MutableLiveData<JSONObject> createQr(HashSet<String> docs, String sessionName,
                                                 String type, String validTime) {
@@ -36,6 +31,7 @@ public class QrLinkViewModel extends AndroidViewModel {
         final String url = URL + String.format("/qrLink/create?sessionName=%1$s&type=%2$s&validTime=%3$s",
                 sessionName, type, validTime);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null, response -> {
+            getQrLink();
             mutableLiveData.postValue(response);
             Log.d(TAG, "success! response: " + response);
         }, error -> {
@@ -64,7 +60,9 @@ public class QrLinkViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<JSONArray> getQrLink() {
-        MutableLiveData<JSONArray> mutableLiveData = new MutableLiveData<>();
+        if (mutableLiveData == null) {
+            mutableLiveData = new MutableLiveData<>();
+        }
         final String url = URL + "/qrLink/get";
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
             mutableLiveData.postValue(response);
@@ -88,6 +86,7 @@ public class QrLinkViewModel extends AndroidViewModel {
         MutableLiveData<JSONObject> mutableLiveData = new MutableLiveData<>();
         final String url = URL + "/qrLink/delete?qrId=" + qrId;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url, null, response -> {
+            getQrLink();
             mutableLiveData.postValue(response);
             Log.d(TAG, "success! response: " + response);
         }, error -> {

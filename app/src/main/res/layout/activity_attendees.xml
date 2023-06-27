@@ -38,6 +38,36 @@
         app:layout_constraintVertical_bias="0.5"
         tools:listitem="@layout/item_attendee" />
 
+    <ProgressBar
+        android:id="@+id/progress_circular"
+        style="@style/Widget.MaterialComponents.CircularProgressIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/white"
+        android:indeterminateTintMode="src_in"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
+        android:text="@string/attendees_empty_state"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/refresh"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/show_qr"
         android:layout_width="wrap_content"
@@ -51,5 +81,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/white" />
 
-
+    <Button
+        android:id="@+id/refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/button_style"
+        android:backgroundTintMode="add"
+        android:drawableEnd="@drawable/baseline_refresh_24"
+        android:drawableTint="@color/white"
+        android:text="@string/refresh"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:backgroundTint="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progress_circular" />
 </androidx.constraintlayout.widget.ConstraintLayout>

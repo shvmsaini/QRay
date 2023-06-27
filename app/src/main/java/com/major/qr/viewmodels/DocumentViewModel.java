@@ -3,11 +3,10 @@ package com.major.qr.viewmodels;
 import static com.major.qr.ui.LoginActivity.URL;
 import static com.major.qr.ui.LoginActivity.requestQueue;
 
-import android.app.Application;
 import android.util.Log;
 
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
@@ -33,16 +32,11 @@ import java.util.Map;
 /**
  * @author shvmsaini
  */
-public class DocumentViewModel extends AndroidViewModel {
+public class DocumentViewModel extends ViewModel {
     private static final String UPLOAD_MAPPING = "/documents/upload";
     private final String TAG = DocumentViewModel.class.getSimpleName();
     private MutableLiveData<ArrayList<Doc>> docList;
     private HashMap<String, MutableLiveData<String>> documentReferencesMLD;
-
-    public DocumentViewModel(Application application) {
-        super(application);
-        documentReferencesMLD = new HashMap<>();
-    }
 
     /**
      * Used to upload doc to database
@@ -51,11 +45,15 @@ public class DocumentViewModel extends AndroidViewModel {
      */
     public MutableLiveData<String> uploadDoc(File file) {
         MutableLiveData<String> mutableLiveData = new MutableLiveData<>();
+        final String extension = file.getName().substring(file.getName().lastIndexOf('.') + 1);
+        String type;
+        if (extension.equals("pdf")) type = "pdf";
+        else type = "image";
         final String URL = LoginActivity.URL + UPLOAD_MAPPING;
         AndroidNetworking.upload(URL)
                 .addHeaders("Authorization", LoginActivity.ACCESS_TOKEN)
                 .addMultipartFile("document", file)
-                .addMultipartParameter("documentType", "image")
+                .addMultipartParameter("documentType", type)
                 .setTag("uploadingFile")
                 .setPriority(Priority.HIGH)
                 .build()
@@ -64,6 +62,7 @@ public class DocumentViewModel extends AndroidViewModel {
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        getDocs();
                         mutableLiveData.postValue(response.toString());
                         Log.d(TAG, "onResponse: " + response);
                     }
@@ -114,9 +113,7 @@ public class DocumentViewModel extends AndroidViewModel {
      * @return List of all docs uploaded by user
      */
     public MutableLiveData<ArrayList<Doc>> getDocs() {
-        if (docList != null)
-            return docList;
-        docList = new MutableLiveData<>();
+        if (docList == null) docList = new MutableLiveData<>();
         final String url = URL + "/documents/getDocuments";
         StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
             ArrayList<Doc> docs = new ArrayList<>();
@@ -130,7 +127,6 @@ public class DocumentViewModel extends AndroidViewModel {
                             object.getString("documentReference"),
                             object.getString("documentId"));
                     docs.add(d);
-
                 }
                 docList.postValue(docs);
             } catch (JSONException e) {
@@ -154,6 +150,7 @@ public class DocumentViewModel extends AndroidViewModel {
      * @return Document Link
      */
     public MutableLiveData<String> getDocLink(String documentReference) {
+        if (documentReferencesMLD == null) documentReferencesMLD = new HashMap<>();
         if (!documentReferencesMLD.containsKey(documentReference)) {
             documentReferencesMLD.put(documentReference, new MutableLiveData<>());
             Log.d(TAG, "getDocLink: ");
@@ -180,29 +177,6 @@ public class DocumentViewModel extends AndroidViewModel {
         return documentReferencesMLD.get(documentReference);
     }
 
-    private byte[] getFileData(String file) {
-        int size = (int) file.length();
-//        int size = (int) pdf.length();
-        byte[] bytes = new byte[size];
-        byte[] tmpBuff = new byte[size];
-
-        try (FileInputStream inputStream = new FileInputStream(file)) {
-            int read = inputStream.read(bytes, 0, size);
-            if (read < size) {
-                int remain = size - read;
-                while (remain > 0) {
-                    read = inputStream.read(tmpBuff, 0, remain);
-                    System.arraycopy(tmpBuff, 0, bytes, size - remain, read);
-                    remain -= read;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return bytes;
-    }
-
     /**
      * Deletes Document
      *
@@ -215,6 +189,7 @@ public class DocumentViewModel extends AndroidViewModel {
                 + "&documentReference=" + docReference;
         StringRequest request = new StringRequest(Request.Method.DELETE, url, response -> {
             Log.d(TAG, response);
+            getDocs();
             mutableLiveData.postValue(response);
         }, error -> Log.d(TAG, error.toString())) {
             @Override

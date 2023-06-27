@@ -10,6 +10,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -26,16 +27,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AttendeesViewModel extends AndroidViewModel {
+public class AttendeesViewModel extends ViewModel {
     public final String TAG = AttendeesViewModel.class.getSimpleName();
     MutableLiveData<ArrayList<Attendee>> list;
 
-    public AttendeesViewModel(@NonNull Application application) {
-        super(application);
-    }
-
+    /**
+     * Get Attendees
+      * @param Id Attendance Id
+     * @return List of Attendees
+     */
     public MutableLiveData<ArrayList<Attendee>> getAttendees(String Id) {
-        list = new MutableLiveData<>();
+        if(list == null) {
+            Log.d(TAG, "list = " + null);
+            list = new MutableLiveData<>();
+        }
         loadAttendeesList(Id);
         return list;
     }
@@ -52,13 +57,9 @@ public class AttendeesViewModel extends AndroidViewModel {
                 for (int i = 0; i < jsonArray.length(); ++i) {
                     JSONObject object = jsonArray.getJSONObject(i);
                     Log.d(TAG, "loadAttendanceList: " + object);
-                    final String addedDateTime = LocalDateTime.parse(
-                                    object.getString("addedDateTime"), DateTimeFormatter
-                                            .ofPattern("yyyy-MM-dd HH:mm:ss"))
-                            .format(DateTimeFormatter
-                                    .ofPattern("yyyy MMM d, KK:mm:ss"));
+
                     attendeesArrayList.add(new Attendee(
-                            addedDateTime,
+                             object.getString("addedDateTime"),
                             object.getString("displayName"),
                             object.getString("attendersId"),
                             object.getString("email"),
@@ -87,6 +88,7 @@ public class AttendeesViewModel extends AndroidViewModel {
         Log.d(TAG, "url = " + url);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url, null, response -> {
             Log.d(TAG, "success! response: " + response);
+            getAttendees(attendanceId);
             res.postValue(response);
         }, error -> Log.e(TAG, "error: " + error.toString())) {
             @Override

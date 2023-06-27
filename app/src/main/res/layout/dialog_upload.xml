@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
+    android:background="@drawable/input_background"
+    android:backgroundTint="@color/primary_blue"
     android:baselineAligned="true"
     android:gravity="center"
     android:minHeight="200dp"
@@ -15,7 +16,8 @@
         android:id="@+id/file_select"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/secondary_blue"
+        android:background="@drawable/input_background"
+        android:backgroundTint="@color/secondary_blue"
         android:gravity="center_vertical"
         android:minHeight="48dp"
         android:padding="8dp"
@@ -25,49 +27,37 @@
         app:drawableEndCompat="@drawable/baseline_file_upload_24"
         app:drawableTint="@color/white" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/docReference"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal">
+        android:layout_marginTop="16dp"
+        android:background="@drawable/input_background"
+        android:backgroundTint="@color/secondary_blue"
+        android:drawablePadding="8dp"
+        android:ellipsize="end"
+        android:enabled="false"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:drawableEndCompat="@drawable/baseline_lock_24"
+        app:drawableTint="@color/white" />
 
-        <TextView
-            android:id="@+id/docReference"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@drawable/input_background"
-            android:backgroundTint="@color/secondary_blue"
-            android:drawablePadding="8dp"
-            android:ellipsize="end"
-            android:enabled="false"
-            android:maxLines="1"
-            android:minHeight="48dp"
-            android:padding="8dp"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:drawableEndCompat="@drawable/baseline_lock_24"
-            app:drawableTint="@color/white" />
-
-        <Space
-            android:layout_width="8dp"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/upload"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/input_background"
-            android:contentDescription="@string/file_upload"
-            android:minHeight="48dp"
-            android:text="@string/upload"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:backgroundTint="@color/secondary_blue" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/upload"
+        android:layout_width="150dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/input_background"
+        android:contentDescription="@string/file_upload"
+        android:maxWidth="10dp"
+        android:minHeight="48dp"
+        android:text="@string/upload"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:backgroundTint="@color/secondary_blue" />
 
 
 </LinearLayout>

@@ -9,6 +9,8 @@ import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,13 +25,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.major.qr.R;
 import com.major.qr.databinding.DialogUploadBinding;
 import com.major.qr.services.UpdateService;
+import com.major.qr.ui.DocumentFragment;
 import com.major.qr.ui.LoginActivity;
 import com.major.qr.utils.FileUtils;
 import com.major.qr.viewmodels.DocumentViewModel;
+
+import org.w3c.dom.Document;
 
 import java.io.File;
 import java.util.Objects;
@@ -67,7 +73,7 @@ public class UploadDialog extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         binding = DialogUploadBinding.inflate(getLayoutInflater());
-        builder.setView(binding.getRoot()).setTitle("Select File");
+        builder.setView(binding.getRoot());
         if (documentReference != null) binding.docReference.setText(documentReference);
         else binding.docReference.setVisibility(View.GONE);
 
@@ -148,13 +154,18 @@ public class UploadDialog extends DialogFragment {
 //                    });
                 } else documentViewModel.uploadDoc(file).observe(this, s -> {
                     Toast.makeText(getContext(), "Successfully uploaded!", Toast.LENGTH_SHORT).show();
+                    FragmentTransaction tr = requireActivity().getSupportFragmentManager().beginTransaction();
+                    tr.replace(R.id.fragment, new DocumentFragment());
+                    tr.commit();
                     dismiss();
                 });
             } else
                 Toast.makeText(getContext(), "Select a file first!", Toast.LENGTH_SHORT).show();
         });
 
-        return builder.create();
+        Dialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        return dialog;
     }
 
     @Override

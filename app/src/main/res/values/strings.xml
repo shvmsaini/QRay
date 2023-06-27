@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">QR</string>
     <string name="password">Password</string>
-    <string name="login">Login\n</string>
+    <string name="login">Login</string>
     <string name="signup">Signup</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
@@ -11,9 +11,7 @@
     <string name="create_account">Create An Account</string>
     <string name="college_id">College ID</string>
     <string name="register">Register</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="state">It\'s so lonely here.</string>
+    <string name="document_empty_state">No documents found. \n Upload a document by clicking on the \'+\' button.</string>
     <string name="title_fragment_attendance">AttendanceFragment</string>
     <string name="title_fragment_document">DocumentFragment</string>
     <string name="file_upload">File Upload</string>
@@ -33,4 +31,11 @@
     <string name="searchbar_hint">Search QRs</string>
     <string name="open_in_browser">Open in Browser</string>
     <string name="expired">Expired</string>
+    <string name="attendees_empty_state">No one has marked this attendance.</string>
+    <string name="create_qr">Create QR with selected Documents</string>
+    <string name="attendance_empty_state">No attendance created. \n Create an attendance register by clicking on the \'+\' button.</string>
+    <string name="lastName">Last Name</string>
+    <string name="firstName">First Name</string>
+    <string name="refresh">Refresh</string>
+    <string name="attendance_name">Attendance Name</string>
 </resources>

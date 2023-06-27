@@ -9,6 +9,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -22,12 +23,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginViewModel extends AndroidViewModel {
+public class LoginViewModel extends ViewModel {
     public final String TAG = LoginViewModel.class.getSimpleName();
-
-    public LoginViewModel(@NonNull Application application) {
-        super(application);
-    }
 
     public MutableLiveData<JSONObject> getLoginData(String email, String password) {
         MutableLiveData<JSONObject> loginData = new MutableLiveData<>();

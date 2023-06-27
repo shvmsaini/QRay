@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
@@ -55,14 +56,19 @@ public class DocDisplayAdapter extends RecyclerView.Adapter<DocDisplayAdapter.It
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Doc doc = list.get(position);
-        documentViewModel.getDocLink(doc.getDocumentReference()).observe((LifecycleOwner) context, link -> {
-            doc.setDocLink(link.substring(1, link.length() - 1));
-            Glide.with(context)
-                    .load(doc.getDocLink())
-                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                    .placeholder(R.drawable.placeholder_doc)
-                    .into(holder.imageView);
-        });
+        if (doc.getDocumentType().equals("pdf"))
+            holder.imageView.setImageDrawable(
+                    AppCompatResources.getDrawable(context, R.drawable.pdf_placeholder));
+        else
+            documentViewModel.getDocLink(doc.getDocumentReference()).observe((LifecycleOwner) context,
+                    link -> {
+                        doc.setDocLink(link.substring(1, link.length() - 1));
+                        Glide.with(context)
+                                .load(doc.getDocLink())
+                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                                .placeholder(R.drawable.placeholder_doc)
+                                .into(holder.imageView);
+                    });
 
         holder.itemView.setOnLongClickListener(view -> {
             if (selectedDocs.contains(list.get(position).getDocumentId())) {
@@ -75,7 +81,8 @@ public class DocDisplayAdapter extends RecyclerView.Adapter<DocDisplayAdapter.It
 
         holder.itemView.setOnClickListener(view -> {
             if (selectedDocs.size() == 0) {
-                DocumentDetailDialog dialog = new DocumentDetailDialog(documentViewModel, doc, this, position);
+                DocumentDetailDialog dialog = new DocumentDetailDialog(documentViewModel, doc,
+                        this, position);
                 dialog.show(((FragmentActivity) context).getSupportFragmentManager(), "Doc Dialog");
                 return;
             }
@@ -84,13 +91,6 @@ public class DocDisplayAdapter extends RecyclerView.Adapter<DocDisplayAdapter.It
             else
                 select(holder, position);
         });
-
-//        holder.updateButton.setOnClickListener(view -> {
-//            UploadDialog uploadDialog = new UploadDialog(doc.getDocumentReference(), documentViewModel);
-//            uploadDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "Your Dialog");
-//        });
-
-
     }
 
     @Override
@@ -115,7 +115,6 @@ public class DocDisplayAdapter extends RecyclerView.Adapter<DocDisplayAdapter.It
         selectedDocs.remove(list.get(position).getDocumentId());
         if (selectedDocs.size() == 0)
             binding.clearAll.setVisibility(View.GONE);
-//        holder.itemView.setBackgroundResource(R.drawable.document_background);
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             holder.itemView.setBackgroundResource(R.drawable.document_background);
         }, 400);

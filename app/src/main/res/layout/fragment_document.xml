@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="@string/state"
+        android:text="@string/document_empty_state"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:visibility="gone"

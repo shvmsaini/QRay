@@ -1,3 +1,3 @@
-package com.major.qr.repository;
+package com.major.qr.repositories;
 public class AttendanceRepository {
 }

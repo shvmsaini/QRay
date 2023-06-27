@@ -18,6 +18,8 @@ import com.major.qr.R;
 import com.major.qr.models.Attendee;
 import com.major.qr.viewmodels.AttendeesViewModel;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class AttendeesDisplayAdapter extends RecyclerView.Adapter<AttendeesDisplayAdapter.ItemViewHolder> {
@@ -48,7 +50,12 @@ public class AttendeesDisplayAdapter extends RecyclerView.Adapter<AttendeesDispl
         Attendee attendee = list.get(position);
         holder.attendeeName.setText(attendee.getDisplayName());
         holder.attendeeEmail.setText(attendee.getEmail());
-        holder.attendeeTime.setText(attendee.getAddedDateTime());
+        final String addedDateTime = LocalDateTime.parse(attendee.getAddedDateTime()
+                        , DateTimeFormatter
+                                .ofPattern("yyyy-MM-dd HH:mm:ss"))
+                .format(DateTimeFormatter
+                        .ofPattern("yyyy MMM d, KK:mm:ss"));
+        holder.attendeeTime.setText(addedDateTime);
         holder.deleteAttendee.setOnClickListener(view -> {
             DialogInterface.OnClickListener dialogClickListener = (dialogInterface, i) -> {
                 switch (i) {
